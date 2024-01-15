@@ -13,7 +13,10 @@ if (session_status() == PHP_SESSION_NONE) {
 }
 
 
-add_shortcode('hotel_booking_price', 'booking_information_function');
+add_shortcode('hotel_booking_price', 'entire_manor_booking_function');
+add_shortcode('rooms', 'rooms_booking_function');
+add_shortcode('cooking_class', 'cooking_class_booking_function');
+add_shortcode('enitre_manor_cooking_class', 'entire_manor_cooking_class_booking_function');
 
 add_action('wp_enqueue_scripts', 'enqueue_hotel_booking_styles');
 
@@ -23,32 +26,15 @@ function enqueue_hotel_booking_styles()
     wp_enqueue_style('hotel-booking-styles', plugin_dir_url(__FILE__) . 'hotel-price-calculator.css');
 }
 
-
-function booking_information_function()
+function entire_manor_booking_function()
 {
 
-
-    $entire_manor_price = get_option('entire_manor_price');
-    $room_price = get_option('rooms_price');
-    $cooking_class_price = get_option('cooking_class_price');
-    $manor_and_cooking = get_option('entire_manor_cooking_class_price');
-
-
-    echo '<h2>Review your Booking</h2>';
-    echo '<script src="C:\Users\H.P\Local Sites\test-site\app\public\wp-content\plugins\Booking\form_handling.js"></script>';
-    echo '<div class="booking-options">';
-    echo '<button class="booking-option" data-option="entire_manor">Entire Manor</button>';
-    echo '<button class="booking-option" data-option="rooms">Rooms</button>';
-    echo '<button class="booking-option" data-option="cooking_classes">Cooking Classes</button>';
-    echo '<button class="booking-option" data-option="entire_manor_cooking_classes">Entire Manor + Cooking Classes</button>';
-    echo '</div>';
-
-    echo '<input type="hidden" id="selected_option" name="selected_option" value="' . htmlspecialchars($_POST['check_in_date'] ?? '') . '">';
-
+    echo '<h2>Complete your Booking</h2>';
+    echo '<script src="' . plugin_dir_url(__FILE__) . 'form_handling.js"></script>';
+    echo '<form method="post" onsubmit="saveFormData()">';
     echo '<div class="hotel-booking-form">';
     echo '<div class="inner-div">';
-    echo '<h5></h5>';
-    echo '<form method="post" onsubmit="saveFormData()">';
+    echo '<h5>Stay</h5>';
     echo '<p id="hotel-booking-form label">
              <label  for="check_in_date">Check-in Date:</label>
              <input class="hotel-booking-date" type="date" id="check_in_date" name="check_in_date" value="' . htmlspecialchars($_POST['check_in_date'] ?? '') . '" required>
@@ -108,6 +94,10 @@ function booking_information_function()
     echo '</div>';
 
 
+    $price_per_night = get_option('entire_manor_price');
+    $cleaning_fee = get_option('cleaning_fee');
+    $coupons = get_option('booking_coupon_data', array());
+
 
     if (isset($_POST['submit'])) {
 
@@ -119,18 +109,6 @@ function booking_information_function()
         $lastname = sanitize_text_field($_POST['last-name']);
         $email = sanitize_email($_POST['email']);
         $phone = sanitize_text_field($_POST['phone']);
-        $selected_option = sanitize_text_field($_POST['selected_option']);
-
-        $price_per_night = match ($selected_option) {
-            'entire_manor' => $entire_manor_price,
-            'rooms' => $room_price,
-            'cooking_classes' => $cooking_class_price,
-            'entire_manor_cooking_classes' => $manor_and_cooking,
-            default => 0,
-        };
-        $cleaning_fee = get_option('cleaning_fee');
-        $coupons = get_option('booking_coupon_data', array());
-
 
 
         if (!validate_dates($check_in_date, $check_out_date)) {
@@ -184,7 +162,7 @@ function booking_information_function()
 
         ?>
         <script>
-            window.location.href = "http://localhost:10004/?page_id=160";
+            window.location.href = "http://localhost:10010/?page_id=19";
         </script>
         <?php
 
@@ -193,6 +171,444 @@ function booking_information_function()
     }
 
 }
+
+function rooms_booking_function()
+{
+    echo '<h2>Review your Booking</h2>';
+    echo '<script src="' . plugin_dir_url(__FILE__) . 'form_handling.js"></script>';
+    echo '<form method="post" onsubmit="saveFormData()">';
+    echo '<div class="hotel-booking-form">';
+    echo '<div class="inner-div">';
+    echo '<h5>Stay</h5>';
+    echo '<p id="hotel-booking-form label">
+             <label  for="check_in_date">Check-in Date:</label>
+             <input class="hotel-booking-date" type="date" id="check_in_date" name="check_in_date" value="' . htmlspecialchars($_POST['check_in_date'] ?? '') . '" required>
+             
+             <label  for="check_out_date">Check-out Date:</label>
+             <input class="hotel-booking-date" type="date" id="check_out_date" name="check_out_date" value="' . htmlspecialchars($_POST['check_out_date'] ?? '') . '" required>
+          </p>';
+
+
+    $options = array('1', '2', ' 3', '4', '5');
+    echo '<label class="hotel-booking-dropdown" for="no-of-adults">Adults</label>';
+    echo '<select id="no-of-adults" name="no-of-adults" class="dropdown-menu" value="' . htmlspecialchars($_POST['no-of-adults'] ?? '') . '">';
+    foreach ($options as $option) {
+        echo '<option value="' . htmlspecialchars($option) . '">' . htmlspecialchars($option) . '</option>';
+    }
+    echo '</select>';
+
+
+    $options = array('0', '1', '2', ' 3', '4', '5');
+    echo '<label class="hotel-booking-dropdown" for="no-of-children">Children</label>';
+    echo '<select id="no-of-children" name="no-of-children" class="dropdown-menu" value="' . htmlspecialchars($_POST['no-of-children'] ?? '') . '">';
+    foreach ($options as $option) {
+        echo '<option value="' . htmlspecialchars($option) . '">' . htmlspecialchars($option) . '</option>';
+    }
+    echo '</select>';
+    echo '</div>';
+
+
+    echo '<div class="inner-div">';
+    echo '<h5>Guest Details</h5>';
+    echo '<p class="customer-info">
+             <label  for="first-last-name">Full Name</label>
+             <input class="text-item" type="text"  name="first-name" placeholder="First Name" value="' . htmlspecialchars($_POST['first-name'] ?? '') . '" required>
+             <input class="text-item" type="text"  name="last-name" placeholder="Last Name" value="' . htmlspecialchars($_POST['last-name'] ?? '') . '" required>
+ 
+             <label  for="email">Email</label>
+             <input class="text-item" type="email"  name="email" placeholder="Email" value="' . htmlspecialchars($_POST['email'] ?? '') . '" required>
+ 
+             <label  for="phone">Phone</label>
+             <input class="text-item" type="tel"  name="phone" placeholder="Phone" value="' . htmlspecialchars($_POST['phone'] ?? '') . '" required>
+ 
+          </p>';
+    echo '</div>';
+
+
+    echo '<div class="inner-div">';
+    echo '<h5>Add Coupon If Any</h5>';
+    echo '<p id="hotel-booking-form label">
+             <label  for="coupon_code">Coupon Code:</label>
+             <input class="hotel-booking-text" type="text" id="coupon_code" name="coupon_code" value="' . htmlspecialchars($_POST['coupon_code'] ?? '') . '">
+          </p>';
+    echo '</div>';
+
+
+    echo '<p><input type="submit" name="submit" value="Calculate Price"></p>';
+    echo '</form>';
+    echo '</div>';
+
+
+    $price_per_night = get_option('rooms_price');
+    $cleaning_fee = get_option('cleaning_fee');
+    $coupons = get_option('booking_coupon_data', array());
+
+
+    if (isset($_POST['submit'])) {
+
+        $check_in_date = sanitize_text_field($_POST['check_in_date']);
+        $check_out_date = sanitize_text_field($_POST['check_out_date']);
+        $adults = sanitize_text_field($_POST['no-of-adults']);
+        $children = sanitize_text_field($_POST['no-of-children']);
+        $firstname = sanitize_text_field($_POST['first-name']);
+        $lastname = sanitize_text_field($_POST['last-name']);
+        $email = sanitize_email($_POST['email']);
+        $phone = sanitize_text_field($_POST['phone']);
+
+
+        if (!validate_dates($check_in_date, $check_out_date)) {
+            return '<p class="error">Error in dates. Please enter valid dates.</p>';
+        }
+
+        $check_in_timestamp = strtotime($check_in_date);
+        $check_out_timestamp = strtotime($check_out_date);
+
+        $one_day = 24 * 60 * 60;
+        $nights = round(abs(($check_in_timestamp - $check_out_timestamp) / $one_day));
+
+
+        $total_price = $nights * $price_per_night;
+        $price_after_added_fee = $total_price + $cleaning_fee;
+
+        $coupon_code = sanitize_text_field($_POST['coupon_code']);
+
+        if (!empty($coupon_code)) {
+            foreach ($coupons as $cc) {
+                if ($coupon_code === $cc['code']) {
+                    $discount_amount = $cc['discount'] * $price_after_added_fee / 100;
+                    $total_amount = $price_after_added_fee - $discount_amount;
+                }
+            }
+        } else {
+            $total_amount = $price_after_added_fee;
+        }
+
+
+
+        $booking_details = new stdClass();
+        $booking_details->check_in_date = $check_in_date;
+        $booking_details->check_out_date = $check_out_date;
+        $booking_details->adults = $adults;
+        $booking_details->children = $children;
+        $booking_details->firstname = $firstname;
+        $booking_details->lastname = $lastname;
+        $booking_details->email = $email;
+        $booking_details->phone = $phone;
+        $booking_details->price_per_night = $price_per_night;
+        $booking_details->nights = $nights;
+        $booking_details->total_price = $total_price;
+        $booking_details->cleaning_fee = $cleaning_fee;
+        $booking_details->coupon_code = $coupon_code;
+        $booking_details->discount_amount = isset($discount_amount) ? $discount_amount : 0;
+        $booking_details->total_amount = $total_amount;
+
+        $_SESSION['booking_details'] = $booking_details;
+
+
+        ?>
+        <script>
+            window.location.href = "http://localhost:10010/?page_id=19";
+        </script>
+        <?php
+
+        exit();
+
+    }
+}
+
+
+function cooking_class_booking_function()
+{
+
+    echo '<h2>Review your Booking</h2>';
+    echo '<script src="' . plugin_dir_url(__FILE__) . 'form_handling.js"></script>';
+    echo '<form method="post" onsubmit="saveFormData()">';
+    echo '<div class="hotel-booking-form">';
+    echo '<div class="inner-div">';
+    echo '<h5>Stay</h5>';
+    echo '<p id="hotel-booking-form label">
+             <label  for="check_in_date">Check-in Date:</label>
+             <input class="hotel-booking-date" type="date" id="check_in_date" name="check_in_date" value="' . htmlspecialchars($_POST['check_in_date'] ?? '') . '" required>
+             
+             <label  for="check_out_date">Check-out Date:</label>
+             <input class="hotel-booking-date" type="date" id="check_out_date" name="check_out_date" value="' . htmlspecialchars($_POST['check_out_date'] ?? '') . '" required>
+          </p>';
+
+
+    $options = array('1', '2', ' 3', '4', '5');
+    echo '<label class="hotel-booking-dropdown" for="no-of-adults">Adults</label>';
+    echo '<select id="no-of-adults" name="no-of-adults" class="dropdown-menu" value="' . htmlspecialchars($_POST['no-of-adults'] ?? '') . '">';
+    foreach ($options as $option) {
+        echo '<option value="' . htmlspecialchars($option) . '">' . htmlspecialchars($option) . '</option>';
+    }
+    echo '</select>';
+
+
+    $options = array('0', '1', '2', ' 3', '4', '5');
+    echo '<label class="hotel-booking-dropdown" for="no-of-children">Children</label>';
+    echo '<select id="no-of-children" name="no-of-children" class="dropdown-menu" value="' . htmlspecialchars($_POST['no-of-children'] ?? '') . '">';
+    foreach ($options as $option) {
+        echo '<option value="' . htmlspecialchars($option) . '">' . htmlspecialchars($option) . '</option>';
+    }
+    echo '</select>';
+    echo '</div>';
+
+
+    echo '<div class="inner-div">';
+    echo '<h5>Guest Details</h5>';
+    echo '<p class="customer-info">
+             <label  for="first-last-name">Full Name</label>
+             <input class="text-item" type="text"  name="first-name" placeholder="First Name" value="' . htmlspecialchars($_POST['first-name'] ?? '') . '" required>
+             <input class="text-item" type="text"  name="last-name" placeholder="Last Name" value="' . htmlspecialchars($_POST['last-name'] ?? '') . '" required>
+ 
+             <label  for="email">Email</label>
+             <input class="text-item" type="email"  name="email" placeholder="Email" value="' . htmlspecialchars($_POST['email'] ?? '') . '" required>
+ 
+             <label  for="phone">Phone</label>
+             <input class="text-item" type="tel"  name="phone" placeholder="Phone" value="' . htmlspecialchars($_POST['phone'] ?? '') . '" required>
+ 
+          </p>';
+    echo '</div>';
+
+
+    echo '<div class="inner-div">';
+    echo '<h5>Add Coupon If Any</h5>';
+    echo '<p id="hotel-booking-form label">
+             <label  for="coupon_code">Coupon Code:</label>
+             <input class="hotel-booking-text" type="text" id="coupon_code" name="coupon_code" value="' . htmlspecialchars($_POST['coupon_code'] ?? '') . '">
+          </p>';
+    echo '</div>';
+
+
+    echo '<p><input type="submit" name="submit" value="Calculate Price"></p>';
+    echo '</form>';
+    echo '</div>';
+
+
+    $price_per_night = get_option('cooking_class_price');
+    $cleaning_fee = get_option('cleaning_fee');
+    $coupons = get_option('booking_coupon_data', array());
+
+
+    if (isset($_POST['submit'])) {
+
+        $check_in_date = sanitize_text_field($_POST['check_in_date']);
+        $check_out_date = sanitize_text_field($_POST['check_out_date']);
+        $adults = sanitize_text_field($_POST['no-of-adults']);
+        $children = sanitize_text_field($_POST['no-of-children']);
+        $firstname = sanitize_text_field($_POST['first-name']);
+        $lastname = sanitize_text_field($_POST['last-name']);
+        $email = sanitize_email($_POST['email']);
+        $phone = sanitize_text_field($_POST['phone']);
+
+
+        if (!validate_dates($check_in_date, $check_out_date)) {
+            return '<p class="error">Error in dates. Please enter valid dates.</p>';
+        }
+
+        $check_in_timestamp = strtotime($check_in_date);
+        $check_out_timestamp = strtotime($check_out_date);
+
+        $one_day = 24 * 60 * 60;
+        $nights = round(abs(($check_in_timestamp - $check_out_timestamp) / $one_day));
+
+
+        $total_price = $nights * $price_per_night;
+        $price_after_added_fee = $total_price + $cleaning_fee;
+
+        $coupon_code = sanitize_text_field($_POST['coupon_code']);
+
+        if (!empty($coupon_code)) {
+            foreach ($coupons as $cc) {
+                if ($coupon_code === $cc['code']) {
+                    $discount_amount = $cc['discount'] * $price_after_added_fee / 100;
+                    $total_amount = $price_after_added_fee - $discount_amount;
+                }
+            }
+        } else {
+            $total_amount = $price_after_added_fee;
+        }
+
+
+
+        $booking_details = new stdClass();
+        $booking_details->check_in_date = $check_in_date;
+        $booking_details->check_out_date = $check_out_date;
+        $booking_details->adults = $adults;
+        $booking_details->children = $children;
+        $booking_details->firstname = $firstname;
+        $booking_details->lastname = $lastname;
+        $booking_details->email = $email;
+        $booking_details->phone = $phone;
+        $booking_details->price_per_night = $price_per_night;
+        $booking_details->nights = $nights;
+        $booking_details->total_price = $total_price;
+        $booking_details->cleaning_fee = $cleaning_fee;
+        $booking_details->coupon_code = $coupon_code;
+        $booking_details->discount_amount = isset($discount_amount) ? $discount_amount : 0;
+        $booking_details->total_amount = $total_amount;
+
+        $_SESSION['booking_details'] = $booking_details;
+
+
+        ?>
+        <script>
+            window.location.href = "http://localhost:10010/?page_id=19";
+        </script>
+        <?php
+
+        exit();
+
+    }
+
+
+}
+
+function entire_manor_cooking_class_booking_function()
+{
+    echo '<h2>Review your Booking</h2>';
+    echo '<script src="' . plugin_dir_url(__FILE__) . 'form_handling.js"></script>';
+    echo '<form method="post" onsubmit="saveFormData()">';
+    echo '<div class="hotel-booking-form">';
+    echo '<div class="inner-div">';
+    echo '<h5>Stay</h5>';
+    echo '<p id="hotel-booking-form label">
+             <label  for="check_in_date">Check-in Date:</label>
+             <input class="hotel-booking-date" type="date" id="check_in_date" name="check_in_date" value="' . htmlspecialchars($_POST['check_in_date'] ?? '') . '" required>
+             
+             <label  for="check_out_date">Check-out Date:</label>
+             <input class="hotel-booking-date" type="date" id="check_out_date" name="check_out_date" value="' . htmlspecialchars($_POST['check_out_date'] ?? '') . '" required>
+          </p>';
+
+
+    $options = array('1', '2', ' 3', '4', '5');
+    echo '<label class="hotel-booking-dropdown" for="no-of-adults">Adults</label>';
+    echo '<select id="no-of-adults" name="no-of-adults" class="dropdown-menu" value="' . htmlspecialchars($_POST['no-of-adults'] ?? '') . '">';
+    foreach ($options as $option) {
+        echo '<option value="' . htmlspecialchars($option) . '">' . htmlspecialchars($option) . '</option>';
+    }
+    echo '</select>';
+
+
+    $options = array('0', '1', '2', ' 3', '4', '5');
+    echo '<label class="hotel-booking-dropdown" for="no-of-children">Children</label>';
+    echo '<select id="no-of-children" name="no-of-children" class="dropdown-menu" value="' . htmlspecialchars($_POST['no-of-children'] ?? '') . '">';
+    foreach ($options as $option) {
+        echo '<option value="' . htmlspecialchars($option) . '">' . htmlspecialchars($option) . '</option>';
+    }
+    echo '</select>';
+    echo '</div>';
+
+
+    echo '<div class="inner-div">';
+    echo '<h5>Guest Details</h5>';
+    echo '<p class="customer-info">
+             <label  for="first-last-name">Full Name</label>
+             <input class="text-item" type="text"  name="first-name" placeholder="First Name" value="' . htmlspecialchars($_POST['first-name'] ?? '') . '" required>
+             <input class="text-item" type="text"  name="last-name" placeholder="Last Name" value="' . htmlspecialchars($_POST['last-name'] ?? '') . '" required>
+ 
+             <label  for="email">Email</label>
+             <input class="text-item" type="email"  name="email" placeholder="Email" value="' . htmlspecialchars($_POST['email'] ?? '') . '" required>
+ 
+             <label  for="phone">Phone</label>
+             <input class="text-item" type="tel"  name="phone" placeholder="Phone" value="' . htmlspecialchars($_POST['phone'] ?? '') . '" required>
+ 
+          </p>';
+    echo '</div>';
+
+
+    echo '<div class="inner-div">';
+    echo '<h5>Add Coupon If Any</h5>';
+    echo '<p id="hotel-booking-form label">
+             <label  for="coupon_code">Coupon Code:</label>
+             <input class="hotel-booking-text" type="text" id="coupon_code" name="coupon_code" value="' . htmlspecialchars($_POST['coupon_code'] ?? '') . '">
+          </p>';
+    echo '</div>';
+
+
+    echo '<p><input type="submit" name="submit" value="Calculate Price"></p>';
+    echo '</form>';
+    echo '</div>';
+
+
+    $price_per_night = get_option('entire_manor_cooking_class_price');
+    $cleaning_fee = get_option('cleaning_fee');
+    $coupons = get_option('booking_coupon_data', array());
+
+
+    if (isset($_POST['submit'])) {
+
+        $check_in_date = sanitize_text_field($_POST['check_in_date']);
+        $check_out_date = sanitize_text_field($_POST['check_out_date']);
+        $adults = sanitize_text_field($_POST['no-of-adults']);
+        $children = sanitize_text_field($_POST['no-of-children']);
+        $firstname = sanitize_text_field($_POST['first-name']);
+        $lastname = sanitize_text_field($_POST['last-name']);
+        $email = sanitize_email($_POST['email']);
+        $phone = sanitize_text_field($_POST['phone']);
+
+
+        if (!validate_dates($check_in_date, $check_out_date)) {
+            return '<p class="error">Error in dates. Please enter valid dates.</p>';
+        }
+
+        $check_in_timestamp = strtotime($check_in_date);
+        $check_out_timestamp = strtotime($check_out_date);
+
+        $one_day = 24 * 60 * 60;
+        $nights = round(abs(($check_in_timestamp - $check_out_timestamp) / $one_day));
+
+
+        $total_price = $nights * $price_per_night;
+        $price_after_added_fee = $total_price + $cleaning_fee;
+
+        $coupon_code = sanitize_text_field($_POST['coupon_code']);
+
+        if (!empty($coupon_code)) {
+            foreach ($coupons as $cc) {
+                if ($coupon_code === $cc['code']) {
+                    $discount_amount = $cc['discount'] * $price_after_added_fee / 100;
+                    $total_amount = $price_after_added_fee - $discount_amount;
+                }
+            }
+        } else {
+            $total_amount = $price_after_added_fee;
+        }
+
+
+
+        $booking_details = new stdClass();
+        $booking_details->check_in_date = $check_in_date;
+        $booking_details->check_out_date = $check_out_date;
+        $booking_details->adults = $adults;
+        $booking_details->children = $children;
+        $booking_details->firstname = $firstname;
+        $booking_details->lastname = $lastname;
+        $booking_details->email = $email;
+        $booking_details->phone = $phone;
+        $booking_details->price_per_night = $price_per_night;
+        $booking_details->nights = $nights;
+        $booking_details->total_price = $total_price;
+        $booking_details->cleaning_fee = $cleaning_fee;
+        $booking_details->coupon_code = $coupon_code;
+        $booking_details->discount_amount = isset($discount_amount) ? $discount_amount : 0;
+        $booking_details->total_amount = $total_amount;
+
+        $_SESSION['booking_details'] = $booking_details;
+
+
+        ?>
+        <script>
+            window.location.href = "http://localhost:10010/?page_id=19";
+        </script>
+        <?php
+
+        exit();
+
+    }
+
+}
+
 
 
 function validate_dates($check_in_date, $check_out_date)
