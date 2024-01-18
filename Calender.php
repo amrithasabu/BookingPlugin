@@ -13,12 +13,47 @@ add_action('wp_enqueue_scripts', 'enqueue_calendar_styles');
 
 function enqueue_calendar_styles()
 {
-    wp_enqueue_style('hotel-booking-styles', plugin_dir_url(__FILE__) . 'Calendar.css');
+    wp_enqueue_style('calendar-styles', plugin_dir_url(__FILE__) . 'Calendar.css');
 }
 
 
 function hotel_rates_calendar($selectedMonth = null)
 {
+    echo '<div class="stay_container">';
+    //echo '<script src="' . plugin_dir_url(__FILE__) . 'SaveForm.js"></script>';
+    //echo '<form action="Insert.php" method="post">';
+    echo '<form method="post">';
+    echo '<p id="stay_container_label">
+    <label for="check_in_date">Check In Date </label>
+    <input type="date" name="check_in_date" value="' . htmlspecialchars($_POST['check_in_date'] ?? '') . '" required >
+    
+    <label for="check_out_date"> Check Out Date </label>
+    <input type="date" name="check_out_date" value="' . htmlspecialchars($_POST['check_out_date'] ?? '') . '" >
+    </p>';
+
+    $options = array('1', '2', ' 3', '4', '5');
+    echo '<label class="no_of_people_dropdown" for="no_of_adults">Adults</label>';
+    echo '<select id="no_of_adults" name="no_of_adults" class="dropdown-menu">';
+    foreach ($options as $option) {
+        echo '<option value="' . htmlspecialchars($_POST['no_of_adults'] ?? '') . '">' . htmlspecialchars($option) . '</option>';
+    }
+    echo '</select>';
+
+
+    $options = array('0', '1', '2', ' 3', '4', '5');
+    echo '<label class="no_of_people_dropdown" for="no_of_children">Children</label>';
+    echo '<select id="no_of_children" name="no_of_children" class="dropdown-menu">';
+    foreach ($options as $option) {
+        echo '<option value="' . htmlspecialchars($_POST['no_of_children'] ?? '') . '">' . htmlspecialchars($option) . '</option>';
+    }
+    echo '</select>';
+    echo '</div>';
+    echo '<br>';
+    //echo '<button>Submit</button>';
+    echo '<p><input type="submit" name="submit" value="Submit"/></p>';
+    echo '</form>';
+
+    //calendar display logic
     $current_year = date('Y');
     $current_month = date('n') - 1;
     $months = array(
@@ -67,6 +102,14 @@ function hotel_rates_calendar($selectedMonth = null)
         echo '</thead>';
 
         echo '<tbody>';
+        if (isset($_POST['submit'])) {
+            $check_in_date = sanitize_text_field($_POST['check_in_date']);
+            $check_out_date = sanitize_text_field($_POST['check_out_date']);
+            $checkInDate = intval(date('j', strtotime($check_in_date)));
+            $checkOutDate = intval(date('j', strtotime($check_out_date)));
+            // $check_in_month = date('n', strtotime($check_in_date));
+            //$check_out_month=date('n', strtotime($check_out_date));
+        }
         $firstDay = date('w', strtotime("$current_year-$m-01"));
         $daysInMonth = date('t', strtotime("$current_year-$m-01"));
 
@@ -80,10 +123,18 @@ function hotel_rates_calendar($selectedMonth = null)
                 if (($i === 0 && $j < $firstDay) || $dayCount > $daysInMonth) {
                     echo '<td></td>';
                 } else {
-                    echo '<td>';
-                    echo $dayCount . '<br>';
-                    echo '$' . $Price_per_night;
-                    echo '</td>';
+                    if ($dayCount >= $checkInDate && $dayCount <= $checkOutDate) {
+                        echo '<td class="calendar-day">';
+                        //echo 'check-in <br>';
+                        echo $dayCount . '<br>';
+                        echo '$' . $Price_per_night . '<br>';
+                        echo '</td>';
+                    } else {
+                        echo '<td>';
+                        echo $dayCount . '<br>';
+                        echo '$' . $Price_per_night . '<br>';
+                        echo '</td>';
+                    }
                     $dayCount++;
                 }
             }
@@ -96,26 +147,25 @@ function hotel_rates_calendar($selectedMonth = null)
     }
     echo '</div>';
     echo '<script>
-        document.addEventListener("DOMContentLoaded", function () {
-            var buttons = document.querySelectorAll(".month-button");
-            buttons.forEach(function (button) {
-                button.addEventListener("click", function () {
-                    var selectedMonth = this.getAttribute("data-month");
-                    var calendars = document.querySelectorAll(".calendar");
-                    calendars.forEach(function (calendar) {
-                        var calendarMonth = calendar.getAttribute("data-month");
-                        calendar.style.display = selectedMonth === calendarMonth ? "block" : "none";
+                document.addEventListener("DOMContentLoaded", function () {
+                    var buttons = document.querySelectorAll(".month-button");
+                    buttons.forEach(function (button) {
+                        button.addEventListener("click", function () {
+                            var selectedMonth = this.getAttribute("data-month");
+                            var calendars = document.querySelectorAll(".calendar");
+                            calendars.forEach(function (calendar) {
+                                var calendarMonth = calendar.getAttribute("data-month");
+                                calendar.style.display = selectedMonth === calendarMonth ? "block" : "none";
+                            });
+                            buttons.forEach(function (btn) {
+                                btn.classList.remove("active");
+                            });
+                            this.classList.add("active");
+                        });
                     });
-                    buttons.forEach(function (btn) {
-                        btn.classList.remove("active");
-                    });
-                    this.classList.add("active");
                 });
-            });
-        });
-    </script>';
+            </script>';
 }
-
 
 
 function calendar_plugin_menu()
