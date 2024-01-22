@@ -13,10 +13,11 @@ if (session_status() == PHP_SESSION_NONE) {
 }
 
 
-add_shortcode('hotel_booking_price', 'entire_manor_booking_function');
+add_shortcode('entire_manor', 'entire_manor_booking_function');
 add_shortcode('rooms', 'rooms_booking_function');
 add_shortcode('cooking_class', 'cooking_class_booking_function');
 add_shortcode('enitre_manor_cooking_class', 'entire_manor_cooking_class_booking_function');
+add_shortcode('display', 'booking_details');
 
 add_action('wp_enqueue_scripts', 'enqueue_hotel_booking_styles');
 
@@ -29,24 +30,20 @@ function enqueue_hotel_booking_styles()
 function entire_manor_booking_function()
 {
 
-    echo '<h2>Complete your Booking</h2>';
     echo '<script src="' . plugin_dir_url(__FILE__) . 'form_handling.js"></script>';
     echo '<form method="post" onsubmit="saveFormData()">';
-    echo '<div class="hotel-booking-form">';
-    echo '<div class="inner-div">';
-    echo '<h5>Stay</h5>';
-    echo '<p id="hotel-booking-form label">
-             <label  for="check_in_date">Check-in Date:</label>
-             <input class="hotel-booking-date" type="date" id="check_in_date" name="check_in_date" value="' . htmlspecialchars($_POST['check_in_date'] ?? '') . '" required>
-             
-             <label  for="check_out_date">Check-out Date:</label>
-             <input class="hotel-booking-date" type="date" id="check_out_date" name="check_out_date" value="' . htmlspecialchars($_POST['check_out_date'] ?? '') . '" required>
-          </p>';
+    echo '<div class="stay_details">';
+    echo '<h5>Stay Details</h5>';
+    echo '<div stay_details_form>';
+    echo '<label  for="check_in_date">Check-in Date:</label>';
+    echo '<input type="date" id="check_in_date" name="check_in_date" value="' . htmlspecialchars($_POST['check_in_date'] ?? '') . '" required>';
 
+    echo '<label  for="check_out_date">Check-out Date:</label>';
+    echo '<input type="date" id="check_out_date" name="check_out_date" value="' . htmlspecialchars($_POST['check_out_date'] ?? '') . '" required>';
 
     $options = array('1', '2', ' 3', '4', '5');
-    echo '<label class="hotel-booking-dropdown" for="no-of-adults">Adults</label>';
-    echo '<select id="no-of-adults" name="no-of-adults" class="dropdown-menu" value="' . htmlspecialchars($_POST['no-of-adults'] ?? '') . '">';
+    echo '<label for="no-of-adults">Adults</label>';
+    echo '<select class="booking_dropdown" id="no-of-adults" name="no-of-adults" value="' . htmlspecialchars($_POST['no-of-adults'] ?? '') . '">';
     foreach ($options as $option) {
         echo '<option value="' . htmlspecialchars($option) . '">' . htmlspecialchars($option) . '</option>';
     }
@@ -54,37 +51,58 @@ function entire_manor_booking_function()
 
 
     $options = array('0', '1', '2', ' 3', '4', '5');
-    echo '<label class="hotel-booking-dropdown" for="no-of-children">Children</label>';
-    echo '<select id="no-of-children" name="no-of-children" class="dropdown-menu" value="' . htmlspecialchars($_POST['no-of-children'] ?? '') . '">';
+    echo '<label for="no-of-children">Children</label>';
+    echo '<select class="booking_dropdown" id="no-of-children" name="no-of-children" value="' . htmlspecialchars($_POST['no-of-children'] ?? '') . '">';
     foreach ($options as $option) {
         echo '<option value="' . htmlspecialchars($option) . '">' . htmlspecialchars($option) . '</option>';
     }
     echo '</select>';
     echo '</div>';
+    echo '</div>';
 
 
-    echo '<div class="inner-div">';
+    echo '<div class="booking_form">';
+    echo '<div class="guest_details">';
     echo '<h5>Guest Details</h5>';
-    echo '<p class="customer-info">
+    echo '<p class="booking_form_label">
              <label  for="first-last-name">Full Name</label>
-             <input class="text-item" type="text"  name="first-name" placeholder="First Name" value="' . htmlspecialchars($_POST['first-name'] ?? '') . '" required>
-             <input class="text-item" type="text"  name="last-name" placeholder="Last Name" value="' . htmlspecialchars($_POST['last-name'] ?? '') . '" required>
- 
+             <input type="text"  name="first-name" placeholder="First Name" value="' . htmlspecialchars($_POST['first-name'] ?? '') . '" required>
+             <input type="text"  name="last-name" placeholder="Last Name" value="' . htmlspecialchars($_POST['last-name'] ?? '') . '" required>
+         </p>';
+    echo '<p class="booking_form_label">
              <label  for="email">Email</label>
-             <input class="text-item" type="email"  name="email" placeholder="Email" value="' . htmlspecialchars($_POST['email'] ?? '') . '" required>
+             <input type="email"  name="email" placeholder="Email" value="' . htmlspecialchars($_POST['email'] ?? '') . '" required>
  
              <label  for="phone">Phone</label>
-             <input class="text-item" type="tel"  name="phone" placeholder="Phone" value="' . htmlspecialchars($_POST['phone'] ?? '') . '" required>
- 
+             <input type="tel"  name="phone" placeholder="Phone" value="' . htmlspecialchars($_POST['phone'] ?? '') . '" required> 
+          </p>';
+    echo '<p class="booking_form_label">
+             <label  for="address">Address</label>
+             <input type="text"  name="address_line_1" placeholder="Address Line 1" value="' . htmlspecialchars($_POST['address'] ?? '') . '" required>
+             <input type="text"  name="address_line_2" placeholder="Address Line 2" value="' . htmlspecialchars($_POST['address'] ?? '') . '" required>
+            </p>';
+    echo '<p class="booking_form_label">
+             <label  for="city">City</label>
+             <input type="text"  name="city" placeholder="Enter City" value="' . htmlspecialchars($_POST['address'] ?? '') . '" required>
+
+             <label  for="state">State/Province</label>
+             <input type="text"  name="state" placeholder="Enter State" value="' . htmlspecialchars($_POST['address'] ?? '') . '" required>
+             </p>';
+    echo '<p class="booking_form_label">
+             <label  for="country">Country</label>
+             <input type="text"  name="country" placeholder="Enter Country" value="' . htmlspecialchars($_POST['address'] ?? '') . '" required>
+
+             <label  for="zipcode">Zipcode</label>
+             <input type="number"  name="zip" value="' . htmlspecialchars($_POST['address'] ?? '') . '" required>
           </p>';
     echo '</div>';
 
 
-    echo '<div class="inner-div">';
+    echo '<div class="coupon_box">';
     echo '<h5>Add Coupon If Any</h5>';
-    echo '<p id="hotel-booking-form label">
+    echo '<p class="coupon">
              <label  for="coupon_code">Coupon Code:</label>
-             <input class="hotel-booking-text" type="text" id="coupon_code" name="coupon_code" value="' . htmlspecialchars($_POST['coupon_code'] ?? '') . '">
+             <input class="text_item" type="text" name="coupon_code" value="' . htmlspecialchars($_POST['coupon_code'] ?? '') . '">
           </p>';
     echo '</div>';
 
@@ -99,6 +117,7 @@ function entire_manor_booking_function()
     $coupons = get_option('booking_coupon_data', array());
 
 
+
     if (isset($_POST['submit'])) {
 
         $check_in_date = sanitize_text_field($_POST['check_in_date']);
@@ -109,6 +128,12 @@ function entire_manor_booking_function()
         $lastname = sanitize_text_field($_POST['last-name']);
         $email = sanitize_email($_POST['email']);
         $phone = sanitize_text_field($_POST['phone']);
+        $addline1 = sanitize_text_field($_POST['address_line_1']);
+        $addline2 = sanitize_text_field($_POST['address_line_2']);
+        $city = sanitize_text_field($_POST['city']);
+        $state = sanitize_text_field($_POST['state']);
+        $country = sanitize_text_field($_POST['country']);
+        $zip = sanitize_text_field($_POST['zip']);
 
 
         if (!validate_dates($check_in_date, $check_out_date)) {
@@ -149,6 +174,12 @@ function entire_manor_booking_function()
         $booking_details->lastname = $lastname;
         $booking_details->email = $email;
         $booking_details->phone = $phone;
+        $booking_details->addline1 = $addline1;
+        $booking_details->addline2 = $addline2;
+        $booking_details->city = $city;
+        $booking_details->state = $state;
+        $booking_details->country = $country;
+        $booking_details->zip = $zip;
         $booking_details->price_per_night = $price_per_night;
         $booking_details->nights = $nights;
         $booking_details->total_price = $total_price;
@@ -158,40 +189,32 @@ function entire_manor_booking_function()
         $booking_details->total_amount = $total_amount;
 
         $_SESSION['booking_details'] = $booking_details;
-
-
         ?>
-        <script>
-            window.location.href = "http://localhost:10010/?page_id=19";
+        <script>     window.location.href = "http://localhost:10010/?page_id=109";
         </script>
         <?php
 
         exit();
-
     }
 
 }
 
 function rooms_booking_function()
 {
-    echo '<h2>Review your Booking</h2>';
     echo '<script src="' . plugin_dir_url(__FILE__) . 'form_handling.js"></script>';
     echo '<form method="post" onsubmit="saveFormData()">';
-    echo '<div class="hotel-booking-form">';
-    echo '<div class="inner-div">';
-    echo '<h5>Stay</h5>';
-    echo '<p id="hotel-booking-form label">
-             <label  for="check_in_date">Check-in Date:</label>
-             <input class="hotel-booking-date" type="date" id="check_in_date" name="check_in_date" value="' . htmlspecialchars($_POST['check_in_date'] ?? '') . '" required>
-             
-             <label  for="check_out_date">Check-out Date:</label>
-             <input class="hotel-booking-date" type="date" id="check_out_date" name="check_out_date" value="' . htmlspecialchars($_POST['check_out_date'] ?? '') . '" required>
-          </p>';
+    echo '<div class="stay_details">';
+    echo '<h5>Stay Details</h5>';
+    echo '<div stay_details_form>';
+    echo '<label  for="check_in_date">Check-in Date:</label>';
+    echo '<input type="date" id="check_in_date" name="check_in_date" value="' . htmlspecialchars($_POST['check_in_date'] ?? '') . '" required>';
 
+    echo '<label  for="check_out_date">Check-out Date:</label>';
+    echo '<input type="date" id="check_out_date" name="check_out_date" value="' . htmlspecialchars($_POST['check_out_date'] ?? '') . '" required>';
 
     $options = array('1', '2', ' 3', '4', '5');
-    echo '<label class="hotel-booking-dropdown" for="no-of-adults">Adults</label>';
-    echo '<select id="no-of-adults" name="no-of-adults" class="dropdown-menu" value="' . htmlspecialchars($_POST['no-of-adults'] ?? '') . '">';
+    echo '<label for="no-of-adults">Adults</label>';
+    echo '<select class="booking_dropdown" id="no-of-adults" name="no-of-adults" value="' . htmlspecialchars($_POST['no-of-adults'] ?? '') . '">';
     foreach ($options as $option) {
         echo '<option value="' . htmlspecialchars($option) . '">' . htmlspecialchars($option) . '</option>';
     }
@@ -199,37 +222,57 @@ function rooms_booking_function()
 
 
     $options = array('0', '1', '2', ' 3', '4', '5');
-    echo '<label class="hotel-booking-dropdown" for="no-of-children">Children</label>';
-    echo '<select id="no-of-children" name="no-of-children" class="dropdown-menu" value="' . htmlspecialchars($_POST['no-of-children'] ?? '') . '">';
+    echo '<label for="no-of-children">Children</label>';
+    echo '<select class="booking_dropdown" id="no-of-children" name="no-of-children" value="' . htmlspecialchars($_POST['no-of-children'] ?? '') . '">';
     foreach ($options as $option) {
         echo '<option value="' . htmlspecialchars($option) . '">' . htmlspecialchars($option) . '</option>';
     }
     echo '</select>';
     echo '</div>';
-
-
-    echo '<div class="inner-div">';
-    echo '<h5>Guest Details</h5>';
-    echo '<p class="customer-info">
-             <label  for="first-last-name">Full Name</label>
-             <input class="text-item" type="text"  name="first-name" placeholder="First Name" value="' . htmlspecialchars($_POST['first-name'] ?? '') . '" required>
-             <input class="text-item" type="text"  name="last-name" placeholder="Last Name" value="' . htmlspecialchars($_POST['last-name'] ?? '') . '" required>
- 
-             <label  for="email">Email</label>
-             <input class="text-item" type="email"  name="email" placeholder="Email" value="' . htmlspecialchars($_POST['email'] ?? '') . '" required>
- 
-             <label  for="phone">Phone</label>
-             <input class="text-item" type="tel"  name="phone" placeholder="Phone" value="' . htmlspecialchars($_POST['phone'] ?? '') . '" required>
- 
-          </p>';
     echo '</div>';
 
 
-    echo '<div class="inner-div">';
+    echo '<div class="booking_form">';
+    echo '<div class="guest_details">';
+    echo '<h5>Guest Details</h5>';
+    echo '<p class="booking_form_label">
+             <label  for="first-last-name">Full Name</label>
+             <input type="text"  name="first-name" placeholder="First Name" value="' . htmlspecialchars($_POST['first-name'] ?? '') . '" required>
+             <input type="text"  name="last-name" placeholder="Last Name" value="' . htmlspecialchars($_POST['last-name'] ?? '') . '" required>
+         </p>';
+    echo '<p class="booking_form_label">
+             <label  for="email">Email</label>
+             <input type="email"  name="email" placeholder="Email" value="' . htmlspecialchars($_POST['email'] ?? '') . '" required>
+ 
+             <label  for="phone">Phone</label>
+             <input type="tel"  name="phone" placeholder="Phone" value="' . htmlspecialchars($_POST['phone'] ?? '') . '" required> 
+          </p>';
+    echo '<p class="booking_form_label">
+             <label  for="address">Address</label>
+             <input type="text"  name="address_line_1" placeholder="Address Line 1" value="' . htmlspecialchars($_POST['address'] ?? '') . '" required>
+             <input type="text"  name="address_line_2" placeholder="Address Line 2" value="' . htmlspecialchars($_POST['address'] ?? '') . '" required>
+            </p>';
+    echo '<p class="booking_form_label">
+             <label  for="city">City</label>
+             <input type="text"  name="city" placeholder="Enter City" value="' . htmlspecialchars($_POST['address'] ?? '') . '" required>
+
+             <label  for="state">State/Province</label>
+             <input type="text"  name="state" placeholder="Enter State" value="' . htmlspecialchars($_POST['address'] ?? '') . '" required>
+             </p>';
+    echo '<p class="booking_form_label">
+             <label  for="country">Country</label>
+             <input type="text"  name="country" placeholder="Enter Country" value="' . htmlspecialchars($_POST['address'] ?? '') . '" required>
+
+             <label  for="zipcode">Zipcode</label>
+             <input type="number"  name="zip" value="' . htmlspecialchars($_POST['address'] ?? '') . '" required>
+          </p>';
+    echo '</div>';
+
+    echo '<div class="coupon_box">';
     echo '<h5>Add Coupon If Any</h5>';
-    echo '<p id="hotel-booking-form label">
+    echo '<p class="coupon">
              <label  for="coupon_code">Coupon Code:</label>
-             <input class="hotel-booking-text" type="text" id="coupon_code" name="coupon_code" value="' . htmlspecialchars($_POST['coupon_code'] ?? '') . '">
+             <input class="text_item" type="text" name="coupon_code" value="' . htmlspecialchars($_POST['coupon_code'] ?? '') . '">
           </p>';
     echo '</div>';
 
@@ -244,6 +287,7 @@ function rooms_booking_function()
     $coupons = get_option('booking_coupon_data', array());
 
 
+
     if (isset($_POST['submit'])) {
 
         $check_in_date = sanitize_text_field($_POST['check_in_date']);
@@ -254,6 +298,12 @@ function rooms_booking_function()
         $lastname = sanitize_text_field($_POST['last-name']);
         $email = sanitize_email($_POST['email']);
         $phone = sanitize_text_field($_POST['phone']);
+        $addline1 = sanitize_text_field($_POST['address_line_1']);
+        $addline2 = sanitize_text_field($_POST['address_line_2']);
+        $city = sanitize_text_field($_POST['city']);
+        $state = sanitize_text_field($_POST['state']);
+        $country = sanitize_text_field($_POST['country']);
+        $zip = sanitize_text_field($_POST['zip']);
 
 
         if (!validate_dates($check_in_date, $check_out_date)) {
@@ -294,6 +344,12 @@ function rooms_booking_function()
         $booking_details->lastname = $lastname;
         $booking_details->email = $email;
         $booking_details->phone = $phone;
+        $booking_details->addline1 = $addline1;
+        $booking_details->addline2 = $addline2;
+        $booking_details->city = $city;
+        $booking_details->state = $state;
+        $booking_details->country = $country;
+        $booking_details->zip = $zip;
         $booking_details->price_per_night = $price_per_night;
         $booking_details->nights = $nights;
         $booking_details->total_price = $total_price;
@@ -303,11 +359,8 @@ function rooms_booking_function()
         $booking_details->total_amount = $total_amount;
 
         $_SESSION['booking_details'] = $booking_details;
-
-
         ?>
-        <script>
-            window.location.href = "http://localhost:10010/?page_id=19";
+        <script>     window.location.href = "http://localhost:10010/?page_id=109";
         </script>
         <?php
 
@@ -320,24 +373,20 @@ function rooms_booking_function()
 function cooking_class_booking_function()
 {
 
-    echo '<h2>Review your Booking</h2>';
     echo '<script src="' . plugin_dir_url(__FILE__) . 'form_handling.js"></script>';
     echo '<form method="post" onsubmit="saveFormData()">';
-    echo '<div class="hotel-booking-form">';
-    echo '<div class="inner-div">';
-    echo '<h5>Stay</h5>';
-    echo '<p id="hotel-booking-form label">
-             <label  for="check_in_date">Check-in Date:</label>
-             <input class="hotel-booking-date" type="date" id="check_in_date" name="check_in_date" value="' . htmlspecialchars($_POST['check_in_date'] ?? '') . '" required>
-             
-             <label  for="check_out_date">Check-out Date:</label>
-             <input class="hotel-booking-date" type="date" id="check_out_date" name="check_out_date" value="' . htmlspecialchars($_POST['check_out_date'] ?? '') . '" required>
-          </p>';
+    echo '<div class="stay_details">';
+    echo '<h5>Stay Details</h5>';
+    echo '<div stay_details_form>';
+    echo '<label  for="check_in_date">Check-in Date:</label>';
+    echo '<input type="date" id="check_in_date" name="check_in_date" value="' . htmlspecialchars($_POST['check_in_date'] ?? '') . '" required>';
 
+    echo '<label  for="check_out_date">Check-out Date:</label>';
+    echo '<input type="date" id="check_out_date" name="check_out_date" value="' . htmlspecialchars($_POST['check_out_date'] ?? '') . '" required>';
 
     $options = array('1', '2', ' 3', '4', '5');
-    echo '<label class="hotel-booking-dropdown" for="no-of-adults">Adults</label>';
-    echo '<select id="no-of-adults" name="no-of-adults" class="dropdown-menu" value="' . htmlspecialchars($_POST['no-of-adults'] ?? '') . '">';
+    echo '<label for="no-of-adults">Adults</label>';
+    echo '<select class="booking_dropdown" id="no-of-adults" name="no-of-adults" value="' . htmlspecialchars($_POST['no-of-adults'] ?? '') . '">';
     foreach ($options as $option) {
         echo '<option value="' . htmlspecialchars($option) . '">' . htmlspecialchars($option) . '</option>';
     }
@@ -345,37 +394,57 @@ function cooking_class_booking_function()
 
 
     $options = array('0', '1', '2', ' 3', '4', '5');
-    echo '<label class="hotel-booking-dropdown" for="no-of-children">Children</label>';
-    echo '<select id="no-of-children" name="no-of-children" class="dropdown-menu" value="' . htmlspecialchars($_POST['no-of-children'] ?? '') . '">';
+    echo '<label for="no-of-children">Children</label>';
+    echo '<select class="booking_dropdown" id="no-of-children" name="no-of-children" value="' . htmlspecialchars($_POST['no-of-children'] ?? '') . '">';
     foreach ($options as $option) {
         echo '<option value="' . htmlspecialchars($option) . '">' . htmlspecialchars($option) . '</option>';
     }
     echo '</select>';
     echo '</div>';
-
-
-    echo '<div class="inner-div">';
-    echo '<h5>Guest Details</h5>';
-    echo '<p class="customer-info">
-             <label  for="first-last-name">Full Name</label>
-             <input class="text-item" type="text"  name="first-name" placeholder="First Name" value="' . htmlspecialchars($_POST['first-name'] ?? '') . '" required>
-             <input class="text-item" type="text"  name="last-name" placeholder="Last Name" value="' . htmlspecialchars($_POST['last-name'] ?? '') . '" required>
- 
-             <label  for="email">Email</label>
-             <input class="text-item" type="email"  name="email" placeholder="Email" value="' . htmlspecialchars($_POST['email'] ?? '') . '" required>
- 
-             <label  for="phone">Phone</label>
-             <input class="text-item" type="tel"  name="phone" placeholder="Phone" value="' . htmlspecialchars($_POST['phone'] ?? '') . '" required>
- 
-          </p>';
     echo '</div>';
 
 
-    echo '<div class="inner-div">';
+    echo '<div class="booking_form">';
+    echo '<div class="guest_details">';
+    echo '<h5>Guest Details</h5>';
+    echo '<p class="booking_form_label">
+             <label  for="first-last-name">Full Name</label>
+             <input type="text"  name="first-name" placeholder="First Name" value="' . htmlspecialchars($_POST['first-name'] ?? '') . '" required>
+             <input type="text"  name="last-name" placeholder="Last Name" value="' . htmlspecialchars($_POST['last-name'] ?? '') . '" required>
+         </p>';
+    echo '<p class="booking_form_label">
+             <label  for="email">Email</label>
+             <input type="email"  name="email" placeholder="Email" value="' . htmlspecialchars($_POST['email'] ?? '') . '" required>
+ 
+             <label  for="phone">Phone</label>
+             <input type="tel"  name="phone" placeholder="Phone" value="' . htmlspecialchars($_POST['phone'] ?? '') . '" required> 
+          </p>';
+    echo '<p class="booking_form_label">
+             <label  for="address">Address</label>
+             <input type="text"  name="address_line_1" placeholder="Address Line 1" value="' . htmlspecialchars($_POST['address'] ?? '') . '" required>
+             <input type="text"  name="address_line_2" placeholder="Address Line 2" value="' . htmlspecialchars($_POST['address'] ?? '') . '" required>
+            </p>';
+    echo '<p class="booking_form_label">
+             <label  for="city">City</label>
+             <input type="text"  name="city" placeholder="Enter City" value="' . htmlspecialchars($_POST['address'] ?? '') . '" required>
+
+             <label  for="state">State/Province</label>
+             <input type="text"  name="state" placeholder="Enter State" value="' . htmlspecialchars($_POST['address'] ?? '') . '" required>
+             </p>';
+    echo '<p class="booking_form_label">
+             <label  for="country">Country</label>
+             <input type="text"  name="country" placeholder="Enter Country" value="' . htmlspecialchars($_POST['address'] ?? '') . '" required>
+
+             <label  for="zipcode">Zipcode</label>
+             <input type="number"  name="zip" value="' . htmlspecialchars($_POST['address'] ?? '') . '" required>
+          </p>';
+    echo '</div>';
+
+    echo '<div class="coupon_box">';
     echo '<h5>Add Coupon If Any</h5>';
-    echo '<p id="hotel-booking-form label">
+    echo '<p class="coupon">
              <label  for="coupon_code">Coupon Code:</label>
-             <input class="hotel-booking-text" type="text" id="coupon_code" name="coupon_code" value="' . htmlspecialchars($_POST['coupon_code'] ?? '') . '">
+             <input class="text_item" type="text" name="coupon_code" value="' . htmlspecialchars($_POST['coupon_code'] ?? '') . '">
           </p>';
     echo '</div>';
 
@@ -390,6 +459,7 @@ function cooking_class_booking_function()
     $coupons = get_option('booking_coupon_data', array());
 
 
+
     if (isset($_POST['submit'])) {
 
         $check_in_date = sanitize_text_field($_POST['check_in_date']);
@@ -400,6 +470,12 @@ function cooking_class_booking_function()
         $lastname = sanitize_text_field($_POST['last-name']);
         $email = sanitize_email($_POST['email']);
         $phone = sanitize_text_field($_POST['phone']);
+        $addline1 = sanitize_text_field($_POST['address_line_1']);
+        $addline2 = sanitize_text_field($_POST['address_line_2']);
+        $city = sanitize_text_field($_POST['city']);
+        $state = sanitize_text_field($_POST['state']);
+        $country = sanitize_text_field($_POST['country']);
+        $zip = sanitize_text_field($_POST['zip']);
 
 
         if (!validate_dates($check_in_date, $check_out_date)) {
@@ -440,6 +516,12 @@ function cooking_class_booking_function()
         $booking_details->lastname = $lastname;
         $booking_details->email = $email;
         $booking_details->phone = $phone;
+        $booking_details->addline1 = $addline1;
+        $booking_details->addline2 = $addline2;
+        $booking_details->city = $city;
+        $booking_details->state = $state;
+        $booking_details->country = $country;
+        $booking_details->zip = $zip;
         $booking_details->price_per_night = $price_per_night;
         $booking_details->nights = $nights;
         $booking_details->total_price = $total_price;
@@ -449,11 +531,8 @@ function cooking_class_booking_function()
         $booking_details->total_amount = $total_amount;
 
         $_SESSION['booking_details'] = $booking_details;
-
-
         ?>
-        <script>
-            window.location.href = "http://localhost:10010/?page_id=19";
+        <script>     window.location.href = "http://localhost:10010/?page_id=109";
         </script>
         <?php
 
@@ -466,24 +545,20 @@ function cooking_class_booking_function()
 
 function entire_manor_cooking_class_booking_function()
 {
-    echo '<h2>Review your Booking</h2>';
     echo '<script src="' . plugin_dir_url(__FILE__) . 'form_handling.js"></script>';
     echo '<form method="post" onsubmit="saveFormData()">';
-    echo '<div class="hotel-booking-form">';
-    echo '<div class="inner-div">';
-    echo '<h5>Stay</h5>';
-    echo '<p id="hotel-booking-form label">
-             <label  for="check_in_date">Check-in Date:</label>
-             <input class="hotel-booking-date" type="date" id="check_in_date" name="check_in_date" value="' . htmlspecialchars($_POST['check_in_date'] ?? '') . '" required>
-             
-             <label  for="check_out_date">Check-out Date:</label>
-             <input class="hotel-booking-date" type="date" id="check_out_date" name="check_out_date" value="' . htmlspecialchars($_POST['check_out_date'] ?? '') . '" required>
-          </p>';
+    echo '<div class="stay_details">';
+    echo '<h5>Stay Details</h5>';
+    echo '<div stay_details_form>';
+    echo '<label  for="check_in_date">Check-in Date:</label>';
+    echo '<input type="date" id="check_in_date" name="check_in_date" value="' . htmlspecialchars($_POST['check_in_date'] ?? '') . '" required>';
 
+    echo '<label  for="check_out_date">Check-out Date:</label>';
+    echo '<input type="date" id="check_out_date" name="check_out_date" value="' . htmlspecialchars($_POST['check_out_date'] ?? '') . '" required>';
 
     $options = array('1', '2', ' 3', '4', '5');
-    echo '<label class="hotel-booking-dropdown" for="no-of-adults">Adults</label>';
-    echo '<select id="no-of-adults" name="no-of-adults" class="dropdown-menu" value="' . htmlspecialchars($_POST['no-of-adults'] ?? '') . '">';
+    echo '<label for="no-of-adults">Adults</label>';
+    echo '<select class="booking_dropdown" id="no-of-adults" name="no-of-adults" value="' . htmlspecialchars($_POST['no-of-adults'] ?? '') . '">';
     foreach ($options as $option) {
         echo '<option value="' . htmlspecialchars($option) . '">' . htmlspecialchars($option) . '</option>';
     }
@@ -491,37 +566,58 @@ function entire_manor_cooking_class_booking_function()
 
 
     $options = array('0', '1', '2', ' 3', '4', '5');
-    echo '<label class="hotel-booking-dropdown" for="no-of-children">Children</label>';
-    echo '<select id="no-of-children" name="no-of-children" class="dropdown-menu" value="' . htmlspecialchars($_POST['no-of-children'] ?? '') . '">';
+    echo '<label for="no-of-children">Children</label>';
+    echo '<select class="booking_dropdown" id="no-of-children" name="no-of-children" value="' . htmlspecialchars($_POST['no-of-children'] ?? '') . '">';
     foreach ($options as $option) {
         echo '<option value="' . htmlspecialchars($option) . '">' . htmlspecialchars($option) . '</option>';
     }
     echo '</select>';
     echo '</div>';
+    echo '</div>';
 
 
-    echo '<div class="inner-div">';
+    echo '<div class="booking_form">';
+    echo '<div class="guest_details">';
     echo '<h5>Guest Details</h5>';
-    echo '<p class="customer-info">
+    echo '<p class="booking_form_label">
              <label  for="first-last-name">Full Name</label>
-             <input class="text-item" type="text"  name="first-name" placeholder="First Name" value="' . htmlspecialchars($_POST['first-name'] ?? '') . '" required>
-             <input class="text-item" type="text"  name="last-name" placeholder="Last Name" value="' . htmlspecialchars($_POST['last-name'] ?? '') . '" required>
- 
+             <input type="text"  name="first-name" placeholder="First Name" value="' . htmlspecialchars($_POST['first-name'] ?? '') . '" required>
+             <input type="text"  name="last-name" placeholder="Last Name" value="' . htmlspecialchars($_POST['last-name'] ?? '') . '" required>
+         </p>';
+    echo '<p class="booking_form_label">
              <label  for="email">Email</label>
-             <input class="text-item" type="email"  name="email" placeholder="Email" value="' . htmlspecialchars($_POST['email'] ?? '') . '" required>
+             <input type="email"  name="email" placeholder="Email" value="' . htmlspecialchars($_POST['email'] ?? '') . '" required>
  
              <label  for="phone">Phone</label>
-             <input class="text-item" type="tel"  name="phone" placeholder="Phone" value="' . htmlspecialchars($_POST['phone'] ?? '') . '" required>
- 
+             <input type="tel"  name="phone" placeholder="Phone" value="' . htmlspecialchars($_POST['phone'] ?? '') . '" required> 
+          </p>';
+    echo '<p class="booking_form_label">
+             <label  for="address">Address</label>
+             <input type="text"  name="address_line_1" placeholder="Address Line 1" value="' . htmlspecialchars($_POST['address'] ?? '') . '" required>
+             <input type="text"  name="address_line_2" placeholder="Address Line 2" value="' . htmlspecialchars($_POST['address'] ?? '') . '" required>
+            </p>';
+    echo '<p class="booking_form_label">
+             <label  for="city">City</label>
+             <input type="text"  name="city" placeholder="Enter City" value="' . htmlspecialchars($_POST['address'] ?? '') . '" required>
+
+             <label  for="state">State/Province</label>
+             <input type="text"  name="state" placeholder="Enter State" value="' . htmlspecialchars($_POST['address'] ?? '') . '" required>
+             </p>';
+    echo '<p class="booking_form_label">
+             <label  for="country">Country</label>
+             <input type="text"  name="country" placeholder="Enter Country" value="' . htmlspecialchars($_POST['address'] ?? '') . '" required>
+
+             <label  for="zip">Zipcode</label>
+             <input type="number"  name="zip" value="' . htmlspecialchars($_POST['address'] ?? '') . '" required>
           </p>';
     echo '</div>';
 
 
-    echo '<div class="inner-div">';
+    echo '<div class="coupon_box">';
     echo '<h5>Add Coupon If Any</h5>';
-    echo '<p id="hotel-booking-form label">
+    echo '<p class="coupon">
              <label  for="coupon_code">Coupon Code:</label>
-             <input class="hotel-booking-text" type="text" id="coupon_code" name="coupon_code" value="' . htmlspecialchars($_POST['coupon_code'] ?? '') . '">
+             <input class="text_item" type="text" name="coupon_code" value="' . htmlspecialchars($_POST['coupon_code'] ?? '') . '">
           </p>';
     echo '</div>';
 
@@ -546,6 +642,12 @@ function entire_manor_cooking_class_booking_function()
         $lastname = sanitize_text_field($_POST['last-name']);
         $email = sanitize_email($_POST['email']);
         $phone = sanitize_text_field($_POST['phone']);
+        $addline1 = sanitize_text_field($_POST['address_line_1']);
+        $addline2 = sanitize_text_field($_POST['address_line_2']);
+        $city = sanitize_text_field($_POST['city']);
+        $state = sanitize_text_field($_POST['state']);
+        $country = sanitize_text_field($_POST['country']);
+        $zip = sanitize_text_field($_POST['zip']);
 
 
         if (!validate_dates($check_in_date, $check_out_date)) {
@@ -586,6 +688,12 @@ function entire_manor_cooking_class_booking_function()
         $booking_details->lastname = $lastname;
         $booking_details->email = $email;
         $booking_details->phone = $phone;
+        $booking_details->addline1 = $addline1;
+        $booking_details->addline2 = $addline2;
+        $booking_details->city = $city;
+        $booking_details->state = $state;
+        $booking_details->country = $country;
+        $booking_details->zip = $zip;
         $booking_details->price_per_night = $price_per_night;
         $booking_details->nights = $nights;
         $booking_details->total_price = $total_price;
@@ -595,11 +703,8 @@ function entire_manor_cooking_class_booking_function()
         $booking_details->total_amount = $total_amount;
 
         $_SESSION['booking_details'] = $booking_details;
-
-
         ?>
-        <script>
-            window.location.href = "http://localhost:10010/?page_id=19";
+        <script>     window.location.href = "http://localhost:10010/?page_id=109";
         </script>
         <?php
 
@@ -609,7 +714,65 @@ function entire_manor_cooking_class_booking_function()
 
 }
 
+function booking_details()
+{
+    session_start();
 
+    if (isset($_SESSION['booking_details'])) {
+        $booking_details = $_SESSION['booking_details'];
+
+        echo '<div class="print_details_form">';
+        echo '<div class="hotel_booking_info_box">';
+        echo '<div class="booking_details">';
+        echo '<h3>Booking details</h3>';
+        echo '<p>Check-in Date:' . $booking_details->check_in_date . '<br></p>';
+        echo '<p>Check-out Date:' . $booking_details->check_out_date . '<br></p>';
+        echo '<p>Adults: ' . $booking_details->adults . '<br></p>';
+        echo '<p>Children: ' . $booking_details->children . '<br></p>';
+        echo '</div>';
+        //echo '<div class="booking_details">';
+        //echo '<img src="wp-content\plugins\Booking\\assets\images\coop.jpg" alt="Haygood Manor">';
+        //echo '<h3>Haygood Manor<h3>';
+        //echo '</div>';
+        echo '<h3>Booked By</h3>';
+        echo '<div class="booked_by">';
+        echo '<p>Name: ' . $booking_details->firstname . '' . $booking_details->lastname . '<br></p>';
+        echo '<p>Email: ' . $booking_details->email . '<br></p>';
+        echo '<p>Phone: ' . $booking_details->phone . '<br></p>';
+        echo '</div>';
+        echo '<div class="booked_by">';
+        echo '<p>Address: ' . $booking_details->addline1 . '<br>';
+        echo '<p>' . $booking_details->addline2 . '<br></p>';
+        echo '<p>' . $booking_details->city . ' , ' . $booking_details->state . '</p>';
+        echo '<p>' . $booking_details->country . ' , ' . $booking_details->zip . '<br></p>';
+        echo '</div>';
+        echo '</div>';
+
+
+        echo '<div class="price_breakup_info_box">';
+        echo '<h3 class="price_breakup">Price Breakup</h3>';
+        echo '<div class="price_breakup">';
+        echo '<p>Price per night:  $' . $booking_details->price_per_night . '<br></p>';
+        echo '<p>Price for ' . $booking_details->nights . ' nights:  $' . $booking_details->total_price . '<br></p>';
+        echo '<p>Cleaning Fee: $' . $booking_details->cleaning_fee . '<br></p>';
+        if (!empty($booking_details->coupon_code)) {
+            echo '<p>Discount applied:  $' . $booking_details->discount_amount . '<br></p>';
+        }
+        echo '<h2>Total amount:  $' . $booking_details->total_amount . '<br></h2>';
+        echo '</div>';
+        echo '</div>';
+        echo '</div>';
+
+        unset($_SESSION['booking_details']);
+
+    } else {
+        echo '<h5>No booking details found.</h5>';
+    }
+
+    echo '<form method="post">';
+    echo '<button class="payment">Payment</button>';
+    echo '</form>';
+}
 
 function validate_dates($check_in_date, $check_out_date)
 {
@@ -733,8 +896,7 @@ function booking_field_coupons_callback()
 
     // JavaScript for adding and removing coupon fields dynamically
     ?>
-    <script>
-        jQuery(document).ready(function ($) { $('.add-coupon-button').click(function () { var index = $('#coupon-data-table tr').length - 1; $('#coupon-data-table').append('<tr>' + '<td><input type="text" name="booking_coupon_data[' + index + '][code]" /></td>' + '<td><input type="text" name="booking_coupon_data[' + index + '][discount]" /></td>' + '<td><button class="remove-coupon-button" type="button">Remove</button></td>' + '</tr>'); }); $(document).on('click', '.remove-coupon-button', function () { $(this).closest('tr').remove(); }); });
+    <script>     jQuery(document).ready(function ($) { $('.add-coupon-button').click(function () { var index = $('#coupon-data-table tr').length - 1; $('#coupon-data-table').append('<tr>' + '<td><input type="text" name="booking_coupon_data[' + index + '][code]" /></td>' + '<td><input type="text" name="booking_coupon_data[' + index + '][discount]" /></td>' + '<td><button class="remove-coupon-button" type="button">Remove</button></td>' + '</tr>'); }); $(document).on('click', '.remove-coupon-button', function () { $(this).closest('tr').remove(); }); });
     </script>
     <?php
 }
