@@ -1,4 +1,125 @@
-.calendar-day {
+.stay_container h2{
+    font-family: "Libre Baskerville", serif ;
+    color: #080808;
+    font-size: 50px;
+    margin: 50px 0px 30px 0px;
+}
+.stay{
+    padding: 20px 70px 20px 70px;
+    margin-left: -10px;
+    margin-bottom: 60px;
+    width: 1532px;
+    border: solid;
+    border-width: 5px;
+    background-color:#ffffff;
+    color: #4682A9;
+}
+.stay_form{
+    display: flex;
+    align-items: center;
+}
+.stay_form label{
+    font-family: "Libre Baskerville", serif ;
+    font-size: 19px;
+    color: #090909;
+    margin-right: 10px;
+    width: 60px;
+}
+.stay_form input{
+    width: 200px;
+    margin-right: 20px;
+    border: solid;
+    color: #4682A9;
+}
+.stay_form select{
+    width: 200px;
+    margin-right: 20px;
+    border: solid;
+    color: #4682A9;
+}
+.booking_dropdown{
+    width: 200px;
+}
+input[type="submit"] {
+    font-family: "Libre Baskerville", serif ;
+    background-color: #4682A9;
+    color: white;
+    width: 150px;
+    padding: 15px;
+    margin-top: 25px;
+}
+.month-buttons-container {
+    overflow-x: auto;
+    white-space: nowrap;
+    display: flex;
+    gap: 10px;
+    margin: 0; 
+    padding: 0;
+    margin: 0px 50px 50px 50px;
+    padding: 0px 30px 0px 30px;
+}
+.month-button {
+    font-family: "Libre Baskerville", serif ;
+    font-weight: 600;
+    font-size: 20px;
+    width: 150px;
+    padding: 30px;
+    white-space: wrap;
+    cursor: pointer;
+    margin: 0;
+    margin-right: 20px;
+    background-color: #ffffff;
+    color: #000000; 
+}
+.active {
+    border: solid;
+    color: #4681a945;
+}
+.month-button:hover{
+    background-color: #4681a9;
+    color: #ffffff; 
+}
+.calendar{
+    margin: 0px 50px 0px 50px;
+    padding: 0px 30px 0px 30px;
+}
+.calendar h3{
+    font-family: "Libre Baskerville", serif ;
+    text-align: center;
+    color: #080808;
+    font-size: 50px;
+}
+.selected-day {
     background-color: #1857a0; 
     color: #fff;
+}
+.past-days{
+    background-color: #90909015;
+    color: #000000;
+}
+.selected-day p{
+    color: #fffcfc;
+    font-family:Georgia;
+    font-size: 10px;
+}
+.selected-day h3{
+    font-family:Georgia;
+    color: #ffffff;
+}
+.unselected-day p{
+    color: #000000;
+    font-family:Georgia;
+    font-size: 10px;
+}
+.unselected-day h3{
+    font-family:Georgia;
+    color: #030303;
+}
+button{
+    width: 200px;
+    font-family: "Libre Baskerville", serif ;
+    background-color: #4682A9;
+    color: white;
+    padding: 20px 20px;
+    margin-left: 580px;
 }

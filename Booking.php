@@ -34,7 +34,7 @@ function entire_manor_booking_function()
     echo '<form method="post" onsubmit="saveFormData()">';
     echo '<div class="stay_details">';
     echo '<h5>Stay Details</h5>';
-    echo '<div stay_details_form>';
+    echo '<div class="stay_details_form">';
     echo '<label  for="check_in_date">Check-in Date:</label>';
     echo '<input type="date" id="check_in_date" name="check_in_date" value="' . htmlspecialchars($_POST['check_in_date'] ?? '') . '" required>';
 
@@ -59,7 +59,6 @@ function entire_manor_booking_function()
     echo '</select>';
     echo '</div>';
     echo '</div>';
-
 
     echo '<div class="booking_form">';
     echo '<div class="guest_details">';
@@ -725,10 +724,10 @@ function booking_details()
         echo '<div class="hotel_booking_info_box">';
         echo '<div class="booking_details">';
         echo '<h3>Booking details</h3>';
-        echo '<p>Check-in Date:' . $booking_details->check_in_date . '<br></p>';
-        echo '<p>Check-out Date:' . $booking_details->check_out_date . '<br></p>';
-        echo '<p>Adults: ' . $booking_details->adults . '<br></p>';
-        echo '<p>Children: ' . $booking_details->children . '<br></p>';
+        echo '<p><span class="label">Check-in Date:</span> <span class="value">' . $booking_details->check_in_date . '</span></p>';
+        echo '<p><span class="label">Check-out Date:</span> <span class="value">' . $booking_details->check_out_date . '</span></p>';
+        echo '<p><span class="label">Adults:</span> <span class="value">' . $booking_details->adults . '</span></p>';
+        echo '<p><span class="label">Children:</span> <span class="value">' . $booking_details->children . '</span></p>';
         echo '</div>';
         //echo '<div class="booking_details">';
         //echo '<img src="wp-content\plugins\Booking\\assets\images\coop.jpg" alt="Haygood Manor">';
@@ -736,31 +735,34 @@ function booking_details()
         //echo '</div>';
         echo '<h3>Booked By</h3>';
         echo '<div class="booked_by">';
-        echo '<p>Name: ' . $booking_details->firstname . '' . $booking_details->lastname . '<br></p>';
-        echo '<p>Email: ' . $booking_details->email . '<br></p>';
-        echo '<p>Phone: ' . $booking_details->phone . '<br></p>';
+        echo '<p><span class="label">Name:</span> <span class="value">' . $booking_details->firstname . ' ' . $booking_details->lastname . '</span></p>';
+        echo '<p><span class="label">Email:</span> <span class="value">' . $booking_details->email . '</span></p>';
+        echo '<p><span class="label">Phone:</span> <span class="value">' . $booking_details->phone . '</span></p>';
         echo '</div>';
+
         echo '<div class="booked_by">';
-        echo '<p>Address: ' . $booking_details->addline1 . '<br>';
-        echo '<p>' . $booking_details->addline2 . '<br></p>';
-        echo '<p>' . $booking_details->city . ' , ' . $booking_details->state . '</p>';
-        echo '<p>' . $booking_details->country . ' , ' . $booking_details->zip . '<br></p>';
+        echo '<p><span class="label">Address:</span> <span class="value">' . $booking_details->addline1 . '</span></p>';
+        echo '<p><span class="label"></span> <span class="value">' . $booking_details->addline2 . '</span></p>';
+        echo '<p><span class="label"></span> <span class="value">' . $booking_details->city . ' , ' . $booking_details->state . '</span></p>';
+        echo '<p><span class="label"></span> <span class="value">' . $booking_details->country . ' , ' . $booking_details->zip . '</span></p>';
         echo '</div>';
         echo '</div>';
+
 
 
         echo '<div class="price_breakup_info_box">';
         echo '<h3 class="price_breakup">Price Breakup</h3>';
         echo '<div class="price_breakup">';
-        echo '<p>Price per night:  $' . $booking_details->price_per_night . '<br></p>';
-        echo '<p>Price for ' . $booking_details->nights . ' nights:  $' . $booking_details->total_price . '<br></p>';
-        echo '<p>Cleaning Fee: $' . $booking_details->cleaning_fee . '<br></p>';
+        echo '<p><span class="label">Price per night:</span> <span class="value">$' . $booking_details->price_per_night . '</span></p>';
+        echo '<p><span class="label">Price for ' . $booking_details->nights . ' nights:</span> <span class="value">$' . $booking_details->total_price . '</span></p>';
+        echo '<p><span class="label">Cleaning Fee:</span> <span class="value">$' . $booking_details->cleaning_fee . '</span></p>';
         if (!empty($booking_details->coupon_code)) {
-            echo '<p>Discount applied:  $' . $booking_details->discount_amount . '<br></p>';
+            echo '<p><span class="label">Discount applied:</span> <span class="value">-$' . $booking_details->discount_amount . '</span></p>';
         }
-        echo '<h2>Total amount:  $' . $booking_details->total_amount . '<br></h2>';
+        echo '<h2><span class="label_total">Total amount:</span> <span class="value_total">$' . $booking_details->total_amount . '</span></h2>';
         echo '</div>';
         echo '</div>';
+
         echo '</div>';
 
         unset($_SESSION['booking_details']);

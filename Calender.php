@@ -16,44 +16,73 @@ function enqueue_calendar_styles()
     wp_enqueue_style('calendar-styles', plugin_dir_url(__FILE__) . 'Calendar.css');
 }
 
-
 function hotel_rates_calendar($selectedMonth = null)
 {
     echo '<div class="stay_container">';
-    //echo '<script src="' . plugin_dir_url(__FILE__) . 'SaveForm.js"></script>';
-    //echo '<form action="Insert.php" method="post">';
+    echo '<script src="' . plugin_dir_url(__FILE__) . 'SaveForm.js"></script>';
+    echo '<h2>Find The Best Price</h2>';
     echo '<form method="post">';
-    echo '<p id="stay_container_label">
-    <label for="check_in_date">Check In Date </label>
-    <input type="date" name="check_in_date" value="' . htmlspecialchars($_POST['check_in_date'] ?? '') . '" required >
-    
-    <label for="check_out_date"> Check Out Date </label>
-    <input type="date" name="check_out_date" value="' . htmlspecialchars($_POST['check_out_date'] ?? '') . '" >
-    </p>';
+    echo '<div class="stay">';
+    echo '<div class="stay_form">';
+    echo '<label  for="check_in_date">Check-in Date:</label>';
+    echo '<input type="date" id="check_in_date" name="check_in_date" value="' . htmlspecialchars($_POST['check_in_date'] ?? '') . '" required>';
+
+    echo '<label  for="check_out_date">Check-out Date:</label>';
+    echo '<input type="date" id="check_out_date" name="check_out_date" value="' . htmlspecialchars($_POST['check_out_date'] ?? '') . '" required>';
 
     $options = array('1', '2', ' 3', '4', '5');
-    echo '<label class="no_of_people_dropdown" for="no_of_adults">Adults</label>';
-    echo '<select id="no_of_adults" name="no_of_adults" class="dropdown-menu">';
+    echo '<label for="no-of-adults">Adults</label>';
+    echo '<select class="booking_dropdown" id="no-of-adults" name="no-of-adults" value="' . htmlspecialchars($_POST['no-of-adults'] ?? '') . '">';
     foreach ($options as $option) {
-        echo '<option value="' . htmlspecialchars($_POST['no_of_adults'] ?? '') . '">' . htmlspecialchars($option) . '</option>';
+        echo '<option value="' . htmlspecialchars($option) . '">' . htmlspecialchars($option) . '</option>';
     }
     echo '</select>';
 
 
     $options = array('0', '1', '2', ' 3', '4', '5');
-    echo '<label class="no_of_people_dropdown" for="no_of_children">Children</label>';
-    echo '<select id="no_of_children" name="no_of_children" class="dropdown-menu">';
+    echo '<label for="no-of-children">Children</label>';
+    echo '<select class="booking_dropdown" id="no-of-children" name="no-of-children" value="' . htmlspecialchars($_POST['no-of-children'] ?? '') . '">';
     foreach ($options as $option) {
-        echo '<option value="' . htmlspecialchars($_POST['no_of_children'] ?? '') . '">' . htmlspecialchars($option) . '</option>';
+        echo '<option value="' . htmlspecialchars($option) . '">' . htmlspecialchars($option) . '</option>';
     }
     echo '</select>';
-    echo '</div>';
-    echo '<br>';
-    //echo '<button>Submit</button>';
     echo '<p><input type="submit" name="submit" value="Submit"/></p>';
+    echo '</div>';
+    echo '</div>';
     echo '</form>';
 
+    if (isset($_POST['submit'])) {
+        $check_in_date = sanitize_text_field($_POST['check_in_date']);
+        $check_out_date = sanitize_text_field($_POST['check_out_date']);
+        $no_of_adults = sanitize_text_field($_POST['no_of_adults']);
+        $no_of_children = sanitize_text_field($_POST['no_of_children']);
+        $checkInDate = intval(date('j', strtotime($check_in_date)));
+        $checkOutDate = intval(date('j', strtotime($check_out_date)));
+        $check_in_month = date('F', strtotime($check_in_date));
+    }
+
+    $hostname = "localhost";
+    $username = "root";
+    $password = "root";
+    $database = "local";
+    $conn = mysqli_connect($hostname, $username, $password, $database);
+    if (mysqli_connect_errno()) {
+        die("Connection Failed:" . mysqli_connect_errno());
+    }
+    $insert_query = "INSERT INTO `booking` (`check_in_date`,`check_out_date`,`no_of_adults`,`no_of_children`) 
+    VALUES (?,?,?,?)";
+    $stmt = mysqli_stmt_init($conn);
+
+    if (!mysqli_stmt_prepare($stmt, $insert_query)) {
+        die(mysqli_error($conn));
+    }
+
+    mysqli_stmt_bind_param($stmt, "ssss", $check_in_date, $check_out_date, $no_of_adults, $no_of_children);
+    mysqli_stmt_execute($stmt);
+    $conn->close();
+
     //calendar display logic
+    $current_date = date('Y-n-j');
     $current_year = date('Y');
     $current_month = date('n') - 1;
     $months = array(
@@ -71,14 +100,13 @@ function hotel_rates_calendar($selectedMonth = null)
         'December'
     );
 
-    echo '<section class="container">';
-    echo '<div class="month-buttons">';
+    echo '<div class="month-buttons-container">';
     foreach ($months as $monthIndex => $month) {
         $active = $selectedMonth === $monthIndex ? 'active' : '';
         echo '<button class="month-button ' . $active . '" data-month="' . $monthIndex . '">' . $month . ' ' . $current_year . '</button>';
     }
     echo '</div>';
-    echo '</section>';
+
 
     if ($selectedMonth === '') {
         $selectedMonth = $current_month;
@@ -100,19 +128,11 @@ function hotel_rates_calendar($selectedMonth = null)
         echo '<th>Sat</th>';
         echo '</tr>';
         echo '</thead>';
-
         echo '<tbody>';
-        if (isset($_POST['submit'])) {
-            $check_in_date = sanitize_text_field($_POST['check_in_date']);
-            $check_out_date = sanitize_text_field($_POST['check_out_date']);
-            $checkInDate = intval(date('j', strtotime($check_in_date)));
-            $checkOutDate = intval(date('j', strtotime($check_out_date)));
-            // $check_in_month = date('n', strtotime($check_in_date));
-            //$check_out_month=date('n', strtotime($check_out_date));
-        }
+
         $firstDay = date('w', strtotime("$current_year-$m-01"));
         $daysInMonth = date('t', strtotime("$current_year-$m-01"));
-
+        $currentDay = intval(date('j', strtotime($current_date)));
         $dayCount = 1;
         $Price_per_night = get_option('price_per_night');
 
@@ -123,26 +143,32 @@ function hotel_rates_calendar($selectedMonth = null)
                 if (($i === 0 && $j < $firstDay) || $dayCount > $daysInMonth) {
                     echo '<td></td>';
                 } else {
-                    if ($dayCount >= $checkInDate && $dayCount <= $checkOutDate) {
-                        echo '<td class="calendar-day">';
-                        //echo 'check-in <br>';
+                    if (($m === date('F')) && ($dayCount < $currentDay)) {
+                        echo '<td class="past-days">';
                         echo $dayCount . '<br>';
-                        echo '$' . $Price_per_night . '<br>';
+                        echo '<br>' . '<br>' . '<br>';
+                        echo '</td>';
+                    } elseif (isset($_POST['submit']) && ($dayCount >= $checkInDate) && ($dayCount <= $checkOutDate) && ($m === $check_in_month)) {
+                        echo '<td class="selected-day">';
+                        echo $dayCount . '<br>';
+                        echo '<h5>$' . $Price_per_night . '<br></h5>';
+                        echo '<p>avg/night for 1 night</p>';
                         echo '</td>';
                     } else {
-                        echo '<td>';
+                        echo '<td class="unselected-day">';
                         echo $dayCount . '<br>';
-                        echo '$' . $Price_per_night . '<br>';
+                        echo '<h5>$' . $Price_per_night . '<br></h5>';
+                        echo '<p>avg/night for 1 night</p>';
                         echo '</td>';
                     }
                     $dayCount++;
                 }
             }
-
             echo '</tr>';
         }
         echo '</tbody>';
         echo '</table>';
+        echo '<button>Book Now</button>';
         echo '</div>';
     }
     echo '</div>';
