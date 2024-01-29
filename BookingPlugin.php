@@ -293,10 +293,16 @@ function entire_manor_booking_function()
         $no_of_adults = $stay_details->no_of_adults;
         $no_of_children = $stay_details->no_of_children;
         $nights = round(abs((strtotime($checkIn) - strtotime($checkOut)) / (24 * 60 * 60)));
+        $month_checkin = date('M', strtotime($checkIn));
+        $day_checkin = date('D', strtotime($checkIn));
+        $date_checkin = date('d', strtotime($checkIn));
+        $month_checkout = date('M', strtotime($checkOut));
+        $day_checkout = date('D', strtotime($checkOut));
+        $date_checkout = date('d', strtotime($checkOut));
         echo '<div class="booking">';
         echo '<div class="booking_items">';
-        echo '<span class="booking_items_label"><h3 class="booking_details_label">CHECK IN </h3><p>' . $checkIn . '</p></span>';
-        echo '<span class="booking_items_label"><h3 class="booking_details_label">CHECK OUT</h3><p>' . $checkOut . '</p></span>';
+        echo '<span class="booking_items_label"><h3 class="booking_details_label">CHECK IN </h3><p>' . $day_checkin . ',' . $month_checkin . ' ' . $date_checkin . '</p></span>';
+        echo '<span class="booking_items_label"><h3 class="booking_details_label">CHECK OUT</h3><p>' . $day_checkout . ',' . $month_checkout . ' ' . $date_checkout . '</p></span>';
         echo '<span class="booking_items_label"><h3 class="booking_details_label">NIGHTS</h3><p>' . $nights . '</p></span>';
         echo '<span class="booking_items_label"><h3 class="booking_details_label">ADULTS</h3><p>' . $no_of_adults . '</p></span>';
         echo '<span class="booking_items_label"><h3 class="booking_details_label">CHILDREN</h3><p>' . $no_of_children . '</p></span>';
@@ -420,8 +426,12 @@ function entire_manor_booking_function()
 
 
         $booking_details = new stdClass();
-        $booking_details->check_in_date = $check_in_date;
-        $booking_details->check_out_date = $check_out_date;
+        $booking_details->check_in_day = $day_checkin;
+        $booking_details->check_in_date = $date_checkin;
+        $booking_details->check_in_month = $month_checkin;
+        $booking_details->check_out_day = $day_checkout;
+        $booking_details->check_out_date = $date_checkout;
+        $booking_details->check_out_month = $month_checkout;
         $booking_details->adults = $adults;
         $booking_details->children = $children;
         $booking_details->firstname = $firstname;
@@ -469,10 +479,16 @@ function rooms_booking_function()
         $no_of_adults = $stay_details->no_of_adults;
         $no_of_children = $stay_details->no_of_children;
         $nights = round(abs((strtotime($checkIn) - strtotime($checkOut)) / (24 * 60 * 60)));
+        $month_checkin = date('M', strtotime($checkIn));
+        $day_checkin = date('D', strtotime($checkIn));
+        $date_checkin = date('d', strtotime($checkIn));
+        $month_checkout = date('M', strtotime($checkOut));
+        $day_checkout = date('D', strtotime($checkOut));
+        $date_checkout = date('d', strtotime($checkOut));
         echo '<div class="booking">';
         echo '<div class="booking_items">';
-        echo '<span class="booking_items_label"><h3 class="booking_details_label">CHECK IN </h3><p>' . $checkIn . '</p></span>';
-        echo '<span class="booking_items_label"><h3 class="booking_details_label">CHECK OUT</h3><p>' . $checkOut . '</p></span>';
+        echo '<span class="booking_items_label"><h3 class="booking_details_label">CHECK IN </h3><p>' . $day_checkin . ',' . $month_checkin . ' ' . $date_checkin . '</p></span>';
+        echo '<span class="booking_items_label"><h3 class="booking_details_label">CHECK OUT</h3><p>' . $day_checkout . ',' . $month_checkout . ' ' . $date_checkout . '</p></span>';
         echo '<span class="booking_items_label"><h3 class="booking_details_label">NIGHTS</h3><p>' . $nights . '</p></span>';
         echo '<span class="booking_items_label"><h3 class="booking_details_label">ADULTS</h3><p>' . $no_of_adults . '</p></span>';
         echo '<span class="booking_items_label"><h3 class="booking_details_label">CHILDREN</h3><p>' . $no_of_children . '</p></span>';
@@ -596,8 +612,12 @@ function rooms_booking_function()
 
 
         $booking_details = new stdClass();
-        $booking_details->check_in_date = $check_in_date;
-        $booking_details->check_out_date = $check_out_date;
+        $booking_details->check_in_day = $day_checkin;
+        $booking_details->check_in_date = $date_checkin;
+        $booking_details->check_in_month = $month_checkin;
+        $booking_details->check_out_day = $day_checkout;
+        $booking_details->check_out_date = $date_checkout;
+        $booking_details->check_out_month = $month_checkout;
         $booking_details->adults = $adults;
         $booking_details->children = $children;
         $booking_details->firstname = $firstname;
@@ -626,7 +646,6 @@ function rooms_booking_function()
 
         exit();
     }
-
 }
 
 function cooking_class_booking_function()
@@ -646,10 +665,16 @@ function cooking_class_booking_function()
         $no_of_adults = $stay_details->no_of_adults;
         $no_of_children = $stay_details->no_of_children;
         $nights = round(abs((strtotime($checkIn) - strtotime($checkOut)) / (24 * 60 * 60)));
+        $month_checkin = date('M', strtotime($checkIn));
+        $day_checkin = date('D', strtotime($checkIn));
+        $date_checkin = date('d', strtotime($checkIn));
+        $month_checkout = date('M', strtotime($checkOut));
+        $day_checkout = date('D', strtotime($checkOut));
+        $date_checkout = date('d', strtotime($checkOut));
         echo '<div class="booking">';
         echo '<div class="booking_items">';
-        echo '<span class="booking_items_label"><h3 class="booking_details_label">CHECK IN </h3><p>' . $checkIn . '</p></span>';
-        echo '<span class="booking_items_label"><h3 class="booking_details_label">CHECK OUT</h3><p>' . $checkOut . '</p></span>';
+        echo '<span class="booking_items_label"><h3 class="booking_details_label">CHECK IN </h3><p>' . $day_checkin . ',' . $month_checkin . ' ' . $date_checkin . '</p></span>';
+        echo '<span class="booking_items_label"><h3 class="booking_details_label">CHECK OUT</h3><p>' . $day_checkout . ',' . $month_checkout . ' ' . $date_checkout . '</p></span>';
         echo '<span class="booking_items_label"><h3 class="booking_details_label">NIGHTS</h3><p>' . $nights . '</p></span>';
         echo '<span class="booking_items_label"><h3 class="booking_details_label">ADULTS</h3><p>' . $no_of_adults . '</p></span>';
         echo '<span class="booking_items_label"><h3 class="booking_details_label">CHILDREN</h3><p>' . $no_of_children . '</p></span>';
@@ -773,8 +798,12 @@ function cooking_class_booking_function()
 
 
         $booking_details = new stdClass();
-        $booking_details->check_in_date = $check_in_date;
-        $booking_details->check_out_date = $check_out_date;
+        $booking_details->check_in_day = $day_checkin;
+        $booking_details->check_in_date = $date_checkin;
+        $booking_details->check_in_month = $month_checkin;
+        $booking_details->check_out_day = $day_checkout;
+        $booking_details->check_out_date = $date_checkout;
+        $booking_details->check_out_month = $month_checkout;
         $booking_details->adults = $adults;
         $booking_details->children = $children;
         $booking_details->firstname = $firstname;
@@ -822,10 +851,16 @@ function entire_manor_cooking_class_booking_function()
         $no_of_adults = $stay_details->no_of_adults;
         $no_of_children = $stay_details->no_of_children;
         $nights = round(abs((strtotime($checkIn) - strtotime($checkOut)) / (24 * 60 * 60)));
+        $month_checkin = date('M', strtotime($checkIn));
+        $day_checkin = date('D', strtotime($checkIn));
+        $date_checkin = date('d', strtotime($checkIn));
+        $month_checkout = date('M', strtotime($checkOut));
+        $day_checkout = date('D', strtotime($checkOut));
+        $date_checkout = date('d', strtotime($checkOut));
         echo '<div class="booking">';
         echo '<div class="booking_items">';
-        echo '<span class="booking_items_label"><h3 class="booking_details_label">CHECK IN </h3><p>' . $checkIn . '</p></span>';
-        echo '<span class="booking_items_label"><h3 class="booking_details_label">CHECK OUT</h3><p>' . $checkOut . '</p></span>';
+        echo '<span class="booking_items_label"><h3 class="booking_details_label">CHECK IN </h3><p>' . $day_checkin . ',' . $month_checkin . ' ' . $date_checkin . '</p></span>';
+        echo '<span class="booking_items_label"><h3 class="booking_details_label">CHECK OUT</h3><p>' . $day_checkout . ',' . $month_checkout . ' ' . $date_checkout . '</p></span>';
         echo '<span class="booking_items_label"><h3 class="booking_details_label">NIGHTS</h3><p>' . $nights . '</p></span>';
         echo '<span class="booking_items_label"><h3 class="booking_details_label">ADULTS</h3><p>' . $no_of_adults . '</p></span>';
         echo '<span class="booking_items_label"><h3 class="booking_details_label">CHILDREN</h3><p>' . $no_of_children . '</p></span>';
@@ -949,8 +984,12 @@ function entire_manor_cooking_class_booking_function()
 
 
         $booking_details = new stdClass();
-        $booking_details->check_in_date = $check_in_date;
-        $booking_details->check_out_date = $check_out_date;
+        $booking_details->check_in_day = $day_checkin;
+        $booking_details->check_in_date = $date_checkin;
+        $booking_details->check_in_month = $month_checkin;
+        $booking_details->check_out_day = $day_checkout;
+        $booking_details->check_out_date = $date_checkout;
+        $booking_details->check_out_month = $month_checkout;
         $booking_details->adults = $adults;
         $booking_details->children = $children;
         $booking_details->firstname = $firstname;
@@ -988,20 +1027,15 @@ function booking_details()
 
     if (isset($_SESSION['booking_details'])) {
         $booking_details = $_SESSION['booking_details'];
-
         echo '<div class="print_details_form">';
         echo '<div class="hotel_booking_info_box">';
         echo '<div class="booking_details">';
         echo '<h3>Booking details</h3>';
-        echo '<p><span class="label">Check-in Date:</span> <span class="value">' . $booking_details->check_in_date . '</span></p>';
-        echo '<p><span class="label">Check-out Date:</span> <span class="value">' . $booking_details->check_out_date . '</span></p>';
+        echo '<p><span class="label">Check-in Date:</span> <span class="value">' . $booking_details->check_in_day . ', ' . $booking_details->check_in_month . ' ' . $booking_details->check_in_date . '</span></p>';
+        echo '<p><span class="label">Check-out Date:</span> <span class="value">' . $booking_details->check_out_day . ', ' . $booking_details->check_out_month . ' ' . $booking_details->check_out_date . '</span></p>';
         echo '<p><span class="label">Adults:</span> <span class="value">' . $booking_details->adults . '</span></p>';
         echo '<p><span class="label">Children:</span> <span class="value">' . $booking_details->children . '</span></p>';
         echo '</div>';
-        //echo '<div class="booking_details">';
-        //echo '<img src="wp-content\plugins\Booking\\assets\images\coop.jpg" alt="Haygood Manor">';
-        //echo '<h3>Haygood Manor<h3>';
-        //echo '</div>';
         echo '<h3>Booked By</h3>';
         echo '<div class="booked_by">';
         echo '<p><span class="label">Name:</span> <span class="value">' . $booking_details->firstname . ' ' . $booking_details->lastname . '</span></p>';
