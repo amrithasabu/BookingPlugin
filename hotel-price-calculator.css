@@ -1,17 +1,23 @@
-.booking_form{
-    width: 1200px;
-    align-self: center;
+.heading{
+    width: 1600px;
+    background-color: #00000051;
+    margin-left: -10px;
+    padding-bottom: 50px;
+}
+.heading h1{
+    font-family: "Libre Baskerville", serif ;
+    color: #080808;
+    font-size: 40px;
+    line-height: 3;
     margin-left: 100px;
 }
 .stay_details{
     padding: 30px 70px 20px 70px;
-    margin-left: -10px;
-    margin-bottom: 60px;
-    width: 1532px;
-    border: solid;
-    border-width: 5px;
+    margin: -60px 0px 60px 110px;
+    width: 1300px;
     background-color:#ffffff;
-    color: #4682A9;
+    color: #000000;
+    box-shadow: 0px 0px 10px #484747;
 }
 .stay_details_form{
     display: flex;
@@ -28,32 +34,34 @@
     font-size: 19px;
     color: #090909;
     margin-right: 10px;
-    width: 30px;
+    width: 70px;
 }
 .stay_details input{
     width: 200px;
     margin-right: 20px;
     border: solid;
-    color: #4682A9;
 }
 .stay_details select{
     width: 200px;
     margin-right: 20px;
     border: solid;
-    color: #4682A9;
 }
 .booking_dropdown{
     width: 200px;
 }
-
+.booking_form{
+    display: flex;
+    flex-wrap: wrap;
+}
+.booking_form h5{
+    font-size: 24px;
+    margin-bottom: 30px;
+}
 .guest_details{
-    margin: 0px 50px 70px 130px;
+    margin: 0px;
+    margin: 0px 50px 50px 130px;
     padding: 30px 70px 70px 70px;
-    border: solid;
-    border-radius: 30px;
-    border-width: 2.5px;
     background-color:#ffffff;
-    color: #4682A9;
     box-shadow: 0px 0px 10px #484747;
 }
 .guest_details h5{
@@ -62,43 +70,39 @@
     font-size: 24px;
     margin-bottom: 30px;
 }
-.booking_form_label{
+.guest_details_label {
     display: flex;
-    flex-direction: row;
     flex-wrap: wrap;
-    margin-bottom: 15px;
-    align-items: center;
-    gap: 30px;
+    justify-content: space-between;
 }
-.booking_form_label input{
-    width: calc(50% - 65px);
-    margin-right: 10px;
-    border: solid;
-    border-width: 2px;
-    color: #4682A9;
+.hidden_label {
+color: #ffffff;
 }
-.booking_form_label label{
+.guest_details label{
     font-family: "Libre Baskerville", serif ;
-    font-size: 18px;
-    font-weight: 600;
-    width: 100%;
-    margin-right: 10px;
-    margin-bottom: 5px;
-    color: #090909;
+    font-size: 19px;
 }
-.booking_form h5{
-    font-size: 24px;
-    margin-bottom: 30px;
+.booking_form_label {
+    flex-basis: calc(50% - 10px);
+    box-sizing: border-box;
+    margin-bottom: 10px;
 }
+.guest_details{
+    flex-basis: calc(50% - 10px); 
+    box-sizing: border-box;
+    margin-bottom: 20px;
+}
+.coupon_box {
+    flex-basis: calc(30% - 10px); 
+    box-sizing: border-box;
+    margin-bottom: 20px;
+    }
 .coupon_box{
-    margin: 0px 50px 50px 130px;
+    margin: 0px;
     padding: 30px 70px 20px 70px;
-    border: solid;
-    border-radius: 30px;
-    border-width: 2.5px;
     background-color:#ffffff;
-    color: #4682A9;
     box-shadow: 0px 0px 10px #484747;
+    height: 300px;
 }
 .coupon_box h5{
     font-family: "Libre Baskerville", serif ;
@@ -114,7 +118,7 @@
 .coupon input{
     border: solid;
     border-width: 2px;
-    color: #4682A9;
+    color: #000000;
 }
 .coupon label{
     font-family: "Libre Baskerville", serif ;
@@ -125,10 +129,11 @@
 }
 input[type="submit"] {
     font-family: "Libre Baskerville", serif ;
-    background-color: #4682A9;
+    background-color: #000000;
     color: white;
     padding: 20px 20px;
-    margin-left: 530px;
+    margin-top: 70px;
+    margin-left: 690px;
 }
 .print_details_form{
     margin-top: 50px;
@@ -249,3 +254,11 @@ button{
     margin-top: 70px;
     margin-left: 660px;
 }
+@media (max-width: 768px) {
+    .stay_details{
+        flex-direction: column;
+    }
+    .booking_form {
+        flex-direction: column;
+    }
+    }

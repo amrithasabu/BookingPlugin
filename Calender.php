@@ -1,6 +1,6 @@
 <?php
 /**
- * Plugin Name: Calender
+ * Plugin Name: Calender (Part 2)
  * Description: Prints the Flexible Dates Calender
  * Version: 1.0
  * Author: Amritha Sabu
@@ -31,8 +31,8 @@ function hotel_rates_calendar($selectedMonth = null)
     echo '<input type="date" id="check_out_date" name="check_out_date" value="' . htmlspecialchars($_POST['check_out_date'] ?? '') . '" required>';
 
     $options = array('1', '2', ' 3', '4', '5');
-    echo '<label for="no-of-adults">Adults</label>';
-    echo '<select class="booking_dropdown" id="no-of-adults" name="no-of-adults" value="' . htmlspecialchars($_POST['no-of-adults'] ?? '') . '">';
+    echo '<label for="no_of_adults">Adults</label>';
+    echo '<select class="booking_dropdown" id="no_of_adults" name="no_of_adults" value="' . htmlspecialchars($_POST['no_of_adults'] ?? '') . '">';
     foreach ($options as $option) {
         echo '<option value="' . htmlspecialchars($option) . '">' . htmlspecialchars($option) . '</option>';
     }
@@ -40,8 +40,8 @@ function hotel_rates_calendar($selectedMonth = null)
 
 
     $options = array('0', '1', '2', ' 3', '4', '5');
-    echo '<label for="no-of-children">Children</label>';
-    echo '<select class="booking_dropdown" id="no-of-children" name="no-of-children" value="' . htmlspecialchars($_POST['no-of-children'] ?? '') . '">';
+    echo '<label for="no_of_children">Children</label>';
+    echo '<select class="booking_dropdown" id="no_of_children" name="no_of_children" value="' . htmlspecialchars($_POST['no_of_children'] ?? '') . '">';
     foreach ($options as $option) {
         echo '<option value="' . htmlspecialchars($option) . '">' . htmlspecialchars($option) . '</option>';
     }
