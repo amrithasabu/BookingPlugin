@@ -1,0 +1,431 @@
+.heading{
+    width: 1600px;
+    background-color: #00000051;
+    margin-left: -10px;
+    padding-bottom: 50px;
+}
+.heading h2{
+    font-family: "Libre Baskerville", serif ;
+    color: #080808;
+    font-size: 40px;
+    line-height: 3;
+    margin-left: 100px;
+}
+.stay_details{
+    padding: 20px 30px 10px 30px;
+    margin: -60px 0px 60px 50px;
+    width: 1400px;
+    background-color:#ffffff;
+    color: #000000;
+    box-shadow: 0px 0px 10px #484747;
+}
+.stay_details_form{
+    display: flex;
+    align-items: center;
+}
+.stay_details label{
+    font-family: "Libre Baskerville", serif ;
+    font-size: 19px;
+    color: #090909;
+    margin-right: 10px;
+}
+.stay_details input{
+    width: 180px;
+    margin-right: 20px;
+    border: solid;
+}
+.stay_details select{
+    width: 180px;
+    margin-right: 20px;
+    border: solid;
+}
+input[type="submit"][value="Submit"]{
+    font-family: "Libre Baskerville", serif ;
+    background-color: #000000;
+    color: white;
+    width: 150px;
+    padding: 17px;
+    margin-top: 27px;
+    margin-left: 20px;
+}
+.month-buttons-container {
+    overflow-x: auto;
+    white-space: nowrap;
+    display: flex;
+    gap: 10px;
+    margin: 0; 
+    padding: 0;
+    margin: 0px 50px 50px 50px;
+    padding: 0px 30px 0px 30px;
+}
+.month-button {
+    font-family: "Libre Baskerville", serif ;
+    font-weight: 600;
+    font-size: 20px;
+    width: 150px;
+    padding: 30px;
+    white-space: wrap;
+    cursor: pointer;
+    margin: 0;
+    margin-right: 20px;
+    background-color: #ffffff;
+    color: #000000; 
+}
+.active {
+    border: solid;
+    color: #4681a945;
+}
+.month-button:hover{
+    background-color: #4681a9;
+    color: #ffffff; 
+}
+.calendar{
+    margin: 0px 50px 0px 50px;
+    padding: 0px 30px 0px 30px;
+}
+.calendar h3{
+    font-family: "Libre Baskerville", serif ;
+    text-align: center;
+    color: #080808;
+    font-size: 50px;
+}
+th{
+    font-family: "Libre Baskerville", serif ;
+}
+td{
+    font-family: "Libre Baskerville", serif ;
+    width: 100px;
+    text-align: start;
+}
+.selected-day {
+    background-color: #1857a0; 
+    color: #fff;
+}
+.past-days{
+    background-color: #90909015;
+    color: #000000;
+}
+.selected-day p{
+    color: #fffcfc;
+    font-family:Georgia;
+    font-size: 10px;
+}
+.selected-day h3{
+    font-family:Georgia;
+    color: #ffffff;
+}
+.unselected-day p{
+    color: #000000;
+    font-family:Georgia;
+    font-size: 10px;
+}
+.unselected-day h3{
+    font-family:Georgia;
+    color: #030303;
+}
+input[type="submit"][value="Book Now"]{
+    width: 200px;
+    font-family: "Libre Baskerville", serif ;
+    background-color: #000000;
+    color: white;
+    padding: 20px 20px;
+    margin-left: 580px;
+}
+.booking{
+    width: 1240px;
+    padding: 30px 0px 0px 30px;
+    margin: -60px 0px 60px 130px;
+    background-color:#ffffff;
+    color: #000000;
+    box-shadow: 0px 0px 10px #484747;
+}
+.booking_items {
+    display: flex;
+    flex-direction: row;
+}
+.booking_items h3{
+    font-family: "Libre Baskerville", serif ;
+    font-size: 20px;
+    margin-right: 150px;
+    font-weight: 500;
+    color: #464646f2;
+    width: 120px;
+}
+.booking_items_label{
+    display: flex;
+    flex-direction: column;
+}
+.booking_items_label p{
+    font-family: "Libre Baskerville", serif ;
+    font-size: 26px;
+    font-weight: 700;
+    padding: 0px;
+    margin-top: -35px;
+}
+.booking_form{
+    display: flex;
+    flex-wrap: wrap;
+}
+.booking_form h5{
+    font-size: 24px;
+    margin-bottom: 30px;
+}
+.guest_details{
+    margin: 0px;
+    margin: 0px 50px 50px 130px;
+    padding: 30px 70px 70px 70px;
+    background-color:#ffffff;
+    box-shadow: 0px 0px 10px #484747;
+}
+.guest_details h5{
+    font-family: "Libre Baskerville", serif ;
+    color: #080808;
+    font-size: 24px;
+    margin-bottom: 30px;
+}
+.guest_details_label {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+.hidden_label {
+color: #ffffff;
+}
+.guest_details label{
+    font-family: "Libre Baskerville", serif ;
+    font-size: 19px;
+}
+.booking_form_label {
+    flex-basis: calc(50% - 10px);
+    box-sizing: border-box;
+    margin-bottom: 30px;
+}
+.guest_details{
+    flex-basis: calc(50% - 10px); 
+    box-sizing: border-box;
+    margin-bottom: 20px;
+}
+.coupon_box {
+    flex-basis: calc(30% - 10px); 
+    box-sizing: border-box;
+    margin-bottom: 20px;
+    }
+.coupon_box{
+    margin: 0px;
+    padding: 30px 70px 20px 70px;
+    background-color:#ffffff;
+    box-shadow: 0px 0px 10px #484747;
+    height: 300px;
+}
+.coupon_box h5{
+    font-family: "Libre Baskerville", serif ;
+    color: #080808;
+    font-size: 24px;
+    margin-bottom: 30px;
+}
+.coupon{
+    align-items: center;
+    gap: 20px;
+    width: 300px;
+}
+.coupon input{
+    border: solid;
+    border-width: 2px;
+    color: #000000;
+}
+.coupon label{
+    font-family: "Libre Baskerville", serif ;
+    font-size: 18px;
+    font-weight: 600;
+    width: 60px;
+    color: #090909;
+}
+input[type="submit"] {
+    font-family: "Libre Baskerville", serif ;
+    background-color: #000000;
+    color: white;
+    padding: 20px 20px;
+    margin-top: 70px;
+    margin-left: 690px;
+}
+.print_details_form{
+    margin-top: 50px;
+}
+.hotel_booking_info_box{
+    width: 1500px;
+    padding: 30px 70px 70px 70px;
+}
+h3{
+    font-family: "Libre Baskerville", serif ;
+    color: #080808;
+    margin-bottom: 30px;
+}
+.hotel_booking_info_box p{
+    font-family: "Libre Baskerville", serif ;
+    font-size: 18px;
+    font-weight: 600;
+    line-height: 0.7;
+    color: #090909;
+}
+.booking_details .label {
+    display: inline-block;
+    width: 350px; 
+    text-align: left;
+}
+.booking_details .value {
+    display: inline-block;
+    width: 100px;
+    text-align: left;
+}
+.booked_by{
+    display: inline-block;
+    width: 50%; 
+    vertical-align: top;
+}
+.booked_by .label {
+    display: inline-block;
+    width: 250px; 
+    text-align: left;
+}
+
+.booked_by .value {
+    display: inline-block;
+    width: 280px; 
+    text-align: left;
+}
+.price_breakup_info_box{
+    width: 1400px;
+    margin-left: 50px;
+    border: solid;
+    border-width: 2.5px;
+    background-color:#ffffff;
+    border-color: #000000;
+}
+.price_breakup_info_box h3{
+    font-family: "Libre Baskerville", serif ;
+    line-height: 1.9;
+    color: #080808;
+    margin-bottom: 30px;
+    background-color: #00000051;
+}
+.price_breakup_info_box h2{
+    font-family: "Libre Baskerville", serif ;
+    font-size: 24px;
+    line-height: 1.7;
+    color: #080808;
+    background-color: #00000051;
+}
+.price_breakup p{
+    padding-left: 50px;
+    font-family: "Libre Baskerville", serif ;
+    font-size: 22px;
+    font-weight: 600;
+    line-height: 0.7;
+    color: #090909;
+}
+.price_breakup .label {
+    display: inline-block;
+    width: 1200px;
+    text-align: left;
+}
+.price_breakup .label_total {
+    display: inline-block;
+    width: 1200px;
+    text-align: left;
+    padding-left: 47px;
+}
+
+.price_breakup .value {
+    display: inline-block;
+    width: 100px;
+    text-align: right;
+}
+.price_breakup .value_total {
+    display: inline-block;
+    width: 130px;
+    text-align: right;
+    margin-left: 45px;
+}
+.booking_details img {
+    width: 550px;
+    height: auto;
+    border: solid; 
+    border-width: 13px;
+    color: #090909;
+}
+.booking_details {
+    display: inline-block;
+    width: 50%; 
+    vertical-align: top; 
+}
+button{
+    font-family:Georgia;
+    width: 160px;
+    background-color: #4682A9;
+    color: white;
+    padding: 20px 20px;
+    margin-top: 70px;
+    margin-left: 660px;
+}
+@media only screen and (max-width: 600px) {
+    .heading{
+        width: 390px;
+        background-color: #00000051;
+    }
+    .heading h2 {
+        font-size: 30px;
+        margin: 0;
+        margin-left: 30px;
+    }
+    .stay_details{
+        width: 390px;
+        margin: 0;
+        margin-left: -10px;
+        margin-top: -60px;
+        padding: 0;
+    }
+    .stay_details_form{
+        display: flex;
+        flex-direction: column;
+        flex-wrap: wrap;
+        gap: 10px;
+        padding: 10px;
+    }
+    .stay_details label{
+        margin-right: 20px;
+        align-items: start;
+    }
+   .stay_details input{
+        width: 100px;
+        margin-right: 20px;
+        border: solid;
+    }
+    .stay_details select{
+        width: 100px;
+        margin-right: 20px;
+        border: solid;
+    }
+    .month-buttons-container {
+        margin: 0; 
+        padding: 0;
+    }
+    .calendar{
+        margin: 0; 
+        padding: 0;
+        margin-left: -5px;
+        width: 400px;
+        height: 300px;
+    }
+    .calendar h3{
+        font-family: "Libre Baskerville", serif ;
+        text-align: center;
+        color: #080808;
+        font-size: 50px;
+    }
+    td{
+        height: 30px;
+    }
+    th{
+        height: 10px;
+    }
+}
