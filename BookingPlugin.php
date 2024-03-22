@@ -13,6 +13,8 @@ if (session_status() == PHP_SESSION_NONE) {
 }
 
 
+add_shortcode('sign_in', 'sign_in_function');
+add_shortcode('stay_options', 'stay_options_function');
 add_shortcode('stay_dates', 'stay_dates_function');
 add_shortcode('rates_calendar', 'hotel_rates_calendar');
 add_shortcode('rates_calendar_mobile', 'hotel_rates_calendar_mobile');
@@ -30,8 +32,238 @@ function enqueue_hotel_booking_styles()
     wp_enqueue_style('hotel-booking-styles', plugin_dir_url(__FILE__) . 'Booking.css');
 }
 
+function sign_in_function()
+{
+    echo '<h1>Join HayGood Manor</h1>';
+    echo '<form method="post">';
+    echo '<div>';
+    echo '<p class="">
+             <label  for="first-name">First Name</label>
+             <input type="text"  name="first-name" placeholder="First Name" value="' . htmlspecialchars($_POST['first-name'] ?? '') . '" required>
+         </p>';
+    echo '<p class="">
+             <label  for="first-name">Last Name</label>
+             <input type="text"  name="last-name" placeholder="Last Name" value="' . htmlspecialchars($_POST['last-name'] ?? '') . '" required>
+         </p>';
+    echo '<p class="">
+             <label  for="email">Email</label>
+             <input type="email"  name="email" placeholder="Email" value="' . htmlspecialchars($_POST['email'] ?? '') . '" required>
+          </p>';
+    echo '<p class="">
+             <label  for="phone">Phone</label>
+             <input type="tel"  name="phone" placeholder="Phone" value="' . htmlspecialchars($_POST['phone'] ?? '') . '" required> 
+          </p>';
+    echo '<p class="">
+             <label  for="address_line_1">Address</label>
+             <input type="text"  name="address_line_1" placeholder="Address Line 1" value="' . htmlspecialchars($_POST['address'] ?? '') . '" required>
+            </p>';
+    echo '<p class="">
+             <label  for="name="address_line_2" class="hidden_label">Address</label>
+             <input type="text"  name="address_line_2" placeholder="Address Line 2" value="' . htmlspecialchars($_POST['address'] ?? '') . '" required>
+            </p>';
+    echo '<p class="">
+             <label  for="city">City</label>
+             <input type="text"  name="city" placeholder="Enter City" value="' . htmlspecialchars($_POST['address'] ?? '') . '" required>
+             </p>';
+    echo '<p class="">
+             <label  for="state">State/Province</label>
+             <input type="text"  name="state" placeholder="Enter State" value="' . htmlspecialchars($_POST['address'] ?? '') . '" required>
+             </p>';
+    echo '<p class="">
+             <label  for="country">Country</label>
+             <input type="text"  name="country" placeholder="Enter Country" value="' . htmlspecialchars($_POST['address'] ?? '') . '" required>
+             </p>';
+    echo '<p class="">
+             <label  for="zipcode">Zipcode</label>
+             <input type="number"  name="zip" value="' . htmlspecialchars($_POST['address'] ?? '') . '" required>
+          </p>';
+    echo '<p class="">
+             <label  for="password">Password</label>
+             <input type="text" pattern="[a-zA-Z0-9\s\-_.,!@#$%^&*()+=?<>{}[\]:;|\/\\]*"  name="pass" value="' . htmlspecialchars($_POST['password'] ?? '') . '" required>
+          </p>';
+    echo '<p class="">
+             <label  for="confirm-pass">Confirm Password</label>
+             <input type="text" pattern="[a-zA-Z0-9\s\-_.,!@#$%^&*()+=?<>{}[\]:;|\/\\]*"  name="confirm-pass" value="' . htmlspecialchars($_POST['confirm-password'] ?? '') . '" required>
+          </p>';
+    echo '</div>';
+    echo '</form>';
+
+
+    $hostname = "localhost";
+    $username = "root";
+    $password = "root";
+    $database = "local";
+    $conn = mysqli_connect($hostname, $username, $password, $database);
+    if (mysqli_connect_errno()) {
+        die ("Connection Failed:" . mysqli_connect_errno());
+    }
+
+    $insert_query = "INSERT INTO `users` (`Unique ID`,`Name`,`Email`,`Phone`,`Address`,`Password`) 
+                VALUES (?,?,?,?,?,?)";
+    $stmt = mysqli_stmt_init($conn);
+
+    if (!$stmt) {
+        die ("Statement initialization failed: " . mysqli_error($conn));
+    }
+
+    if (!mysqli_stmt_prepare($stmt, $insert_query)) {
+        die ("Statement preparation failed: " . mysqli_stmt_error($stmt));
+    }
+    mysqli_stmt_bind_param($stmt, "sssiss", $UID, $FullName, $email, $phone, $Address, $password);
+    if (!mysqli_stmt_execute($stmt)) {
+        die ("Statement execution failed: " . mysqli_stmt_error($stmt));
+    }
+    mysqli_stmt_close($stmt);
+    mysqli_close($conn);
+
+}
+
+function stay_options_function()
+{
+    echo '<body style="background-color: #ffffff;">';
+    echo '<div class="haygood-manor-heading">';
+    echo '<h1>HayGood Manor</h1>';
+    echo '</div>';
+    $Entire_Manor = get_option('entire_manor_price');
+    $Cooking_Class = get_option('cooking_class_price');
+    $Entire_Manor_Cooking_Class = get_option('entire_manor_cooking_class_price');
+    $entire_manor_dir = plugin_dir_url(__FILE__) . 'assets/images/manor.jpg';
+    $cooking_dir = plugin_dir_url(__FILE__) . 'assets/images/cooking.jpg';
+    $room_dir = plugin_dir_url(__FILE__) . 'assets/images/room.jpg';
+    echo '<div class="stay-options">';
+    echo '<div class="stay-options-heading">';
+    echo '<h1> Stay Options <h1>';
+    echo '</div>';
+    echo '<br>';
+
+    echo '<div class="entire-manor">';
+    echo '<img src="' . $entire_manor_dir . '" alt="HayGood Manor Image" class="image">';
+    echo '<div class="content">';
+    echo '<h2 class="heading-stay"> Entire Manor <h2>';
+    echo '<p class="para">HayGood Manor - Historic Victorian plantation house built - 1883.
+            Access to a private and personalized experience, ideal for gatherings, events, retreats, or simply enjoying a luxurious vacation with family and friends. <p>';
+    //echo '<p class="para">$' . $Entire_Manor . '<p>';
+    echo '<form class="form" method="post">';
+    echo '<input type="submit" name="submit_1" value="View Rates"/>';
+    echo '</form>';
+    echo '</div>';
+    echo '</div>';
+
+    echo '<div class="cooking-class">';
+    echo '<img src="' . $entire_manor_dir . '" alt="HayGood Manor Image" class="image">';
+    echo '<div class="content">';
+    echo '<h2 class="heading-stay"> Cooking Class <h2>';
+    echo '<p class="para">Embark on a culinary journey with our specialized cooking classes at the HG Cooking Institute.<p>';
+    echo '<br>';
+    echo '<br>';
+    //echo '<p class="para">$' . $Cooking_Class . '<p>';
+    echo '<form class="form" method="post">';
+    echo '<input type="submit" name="submit_2" value="View Rates"/>';
+    echo '</form>';
+    echo '</div>';
+    echo '</div>';
+
+    echo '<div class="entiremanor-cookingclass">';
+    echo '<img src="' . $entire_manor_dir . '" alt="HayGood Manor Image" class="image">';
+    echo '<div class="content">';
+    echo '<h2 class="heading-stay">Entire Mnaor + Cooking Class <h2>';
+    echo '<p class="para">description
+            <br><p>';
+    echo '<br>';
+    echo '<br>';
+    //echo '<p class="para">$' . $Entire_Manor_Cooking_Class . '<p>';
+    echo '<form class="form" method="post">';
+    echo '<input type="submit" name="submit_3" value="View Rates"/>';
+    echo '</form>';
+    echo '</div>';
+    echo '</div>';
+
+    echo '<div class="rooms">';
+    echo '<img src="' . $room_dir . '" alt="HayGood Manor Image" class="image">';
+    echo '<div class="content">';
+    echo '<h2 class="heading-stay"> Rooms <h2>';
+    echo '<p class="para">description<p>';
+    echo '<br>';
+    echo '<br>';
+    //echo '<p class="para">$' . $Entire_Manor . '<p>';
+    echo '<form class="form" method="post">';
+    echo '<input type="submit" name="submit_4" value="View Rates"/>';
+    echo '</form>';
+    echo '</div>';
+    echo '</div>';
+    echo '</div>';
+    echo '</body>';
+
+    if (isset ($_POST['submit_1'])) {
+        $choice = 1;
+        $redirect_url = 'http://localhost:10010/?page_id=234&value=' . urlencode($choice);
+        ?>
+        <script>     window.location.href = "<?php echo $redirect_url; ?>";
+        </script>
+        <?php
+        exit();
+    } else if (isset ($_POST['submit_2'])) {
+        $choice = 2;
+        $redirect_url = 'http://localhost:10010/?page_id=234&value=' . urlencode($choice);
+        ?>
+            <script>     wi    ndow.location.href = "<?php echo $redirect_url; ?>";
+            </script>
+            <?php
+            exit();
+    } else if (isset ($_POST['submit_3'])) {
+        $choice = 3;
+        $redirect_url = 'http://localhost:10010/?page_id=234&value=' . urlencode($choice);
+        ?>
+                <script>     window.location.href = "<?php echo $redirect_url; ?>";
+                </script>
+            <?php
+            exit();
+    } else if (isset ($_POST['submit_4'])) {
+        $choice = 4;
+        $redirect_url = 'http://localhost:10010/?page_id=234&value=' . urlencode($choice);
+        ?>
+                    <script>     window.location.href = "<?php echo $redirect_url; ?>";
+                    </script>
+            <?php
+            exit();
+    }
+}
+
 function stay_dates_function()
 {
+    $hostname = "localhost";
+    $username = "root";
+    $password = "root";
+    $database = "local";
+    $conn = mysqli_connect($hostname, $username, $password, $database);
+    if (mysqli_connect_errno()) {
+        die ("Connection Failed:" . mysqli_connect_errno());
+    }
+
+    $select_query = "SELECT * FROM `booking_details`";
+    $result = mysqli_query($conn, $select_query);
+
+    if (!$result) {
+        die ("Error retrieving data: " . mysqli_error($conn));
+    }
+    $bookings = array();
+    while ($row = mysqli_fetch_assoc($result)) {
+        //$bookings[] = $row;
+        $booked_check_in = $row['Check In'];
+        $booked_check_out = $row['Check Out'];
+        $bookings[] = array(
+            "check_in" => $booked_check_in,
+            "check_out" => $booked_check_out
+        );
+        //var_dump($bookings);
+    }
+
+    $currentDate = date('Y-n-j');
+
+
+    echo '<div class="haygood-manor-heading">';
+    echo '<h1>HayGood Manor</h1>';
+    echo '</div>';
     echo '<div class="heading">';
     echo '<h2>Find The Best Price</h2>';
     echo '</div>';
@@ -69,6 +301,43 @@ function stay_dates_function()
     echo '</div>';
     echo '</div>';
     echo '</form>';
+
+    echo '<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var bookedDates = <?php echo json_encode($bookings); ?>;
+        var checkInDate = document.getElementById("check_in_date");
+        var checkOutDate = document.getElementById("check_out_date");
+    
+        checkInDate.addEventListener("change", function () {
+            checkOutDate.setAttribute("min", checkInDate.value);
+            disableBookedDates(checkInDate.value, checkOutDate.value);
+        });
+    
+        checkOutDate.addEventListener("change", function () {
+            disableBookedDates(checkInDate.value, checkOutDate.value);
+        });
+    
+        function disableBookedDates(checkIn, checkOut) {
+            var datesToDisable = [];
+            bookedDates.forEach(function (booking) {
+                var bookingStart = new Date(booking.check_in);
+                var bookingEnd = new Date(booking.check_out);
+    
+                var currentDate = new Date(checkIn);
+                while (currentDate <= bookingEnd) {
+                    if (currentDate >= bookingStart && currentDate <= bookingEnd) {
+                        datesToDisable.push(currentDate.toISOString().split("T")[0]);
+                    }
+                    currentDate.setDate(currentDate.getDate() + 1);
+                }
+            });
+    
+            var datePicker = document.getElementById("check_in_date");
+            var disabledDates = datesToDisable.join(",");
+            datePicker.setAttribute("disabledDates", disabledDates);
+        }
+    });
+    </script>';
     echo '<script>
             document.addEventListener("DOMContentLoaded", function() {
             function getToday() {
@@ -84,7 +353,7 @@ function stay_dates_function()
          </script>';
 
 
-    if (isset($_POST['submit'])) {
+    if (isset ($_POST['submit'])) {
         $check_in_date = sanitize_text_field($_POST['check_in_date']);
         $check_out_date = sanitize_text_field($_POST['check_out_date']);
         $no_of_adults = sanitize_text_field($_POST['no_of_adults']);
@@ -94,27 +363,27 @@ function stay_dates_function()
         $check_in_month = date('F', strtotime($check_in_date));
     }
 
-    $hostname = "localhost";
-    $username = "root";
-    $password = "root";
-    $database = "local";
-    $conn = mysqli_connect($hostname, $username, $password, $database);
-    if (mysqli_connect_errno()) {
-        die("Connection Failed:" . mysqli_connect_errno());
-    }
-    $insert_query = "INSERT INTO `booking` (`check_in_date`,`check_out_date`,`no_of_adults`,`no_of_children`) 
-    VALUES (?,?,?,?)";
-    $stmt = mysqli_stmt_init($conn);
+    /*$hostname = "localhost";
+     $username = "root";
+     $password = "root";
+     $database = "local";
+     $conn = mysqli_connect($hostname, $username, $password, $database);
+     if (mysqli_connect_errno()) {
+         die("Connection Failed:" . mysqli_connect_errno());
+     }
+     $insert_query = "INSERT INTO `booking` (`check_in_date`,`check_out_date`,`no_of_adults`,`no_of_children`) 
+     VALUES (?,?,?,?)";
+     $stmt = mysqli_stmt_init($conn);
 
-    if (!mysqli_stmt_prepare($stmt, $insert_query)) {
-        die(mysqli_error($conn));
-    }
+     if (!mysqli_stmt_prepare($stmt, $insert_query)) {
+         die(mysqli_error($conn));
+     }
 
-    mysqli_stmt_bind_param($stmt, "ssss", $check_in_date, $check_out_date, $no_of_adults, $no_of_children);
-    mysqli_stmt_execute($stmt);
-    $conn->close();
+     mysqli_stmt_bind_param($stmt, "ssss", $check_in_date, $check_out_date, $no_of_adults, $no_of_children);
+     mysqli_stmt_execute($stmt);
+     $conn->close();*/
 
-    if (isset($_POST['submit'])) {
+    if (isset ($_POST['submit'])) {
         $stay_details = new stdClass();
         $stay_details->check_in_date = $checkInDate;
         $stay_details->check_in = $check_in_date;
@@ -127,14 +396,28 @@ function stay_dates_function()
     }
 
 }
+
 function hotel_rates_calendar($selectedMonth = null)
 {
-    $filename = plugin_dir_url(__FILE__) . 'Booking.csv';
+    if (isset ($_GET['value'])) {
+        $received_value = $_GET['value'];
+        if ($received_value == 1) {
+            $filename = plugin_dir_url(__FILE__) . '/assets/Prices/EntireManorPriceList.csv';
+        } else if ($received_value == 2) {
+            $filename = plugin_dir_url(__FILE__) . '/assets/Prices/CookingClassPriceList.csv';
+        } else if ($received_value == 3) {
+            $filename = plugin_dir_url(__FILE__) . '/assets/Prices/EntireManor+CookingClass.csv';
+        } else if ($received_value == 4) {
+            $filename = plugin_dir_url(__FILE__) . '/assets/Prices/Rooms.csv';
+        }
+    }
+
+    $filename = plugin_dir_url(__FILE__) . 'EntireManorPriceList.csv';
     $data = [];
     $f = fopen($filename, 'r');
 
     if ($f === false) {
-        die('Cannot open the file ' . $filename);
+        die ('Cannot open the file ' . $filename);
     }
     while (($row = fgetcsv($f)) !== false) {
         $data[] = $row;
@@ -211,7 +494,7 @@ function hotel_rates_calendar($selectedMonth = null)
             $dayCount = 1;
             session_start();
 
-            if (isset($_SESSION['stay_details'])) {
+            if (isset ($_SESSION['stay_details'])) {
                 $stay_details = $_SESSION['stay_details'];
                 $checkInDate = $stay_details->check_in_date;
                 $checkOutDate = $stay_details->check_out_date;
@@ -229,8 +512,8 @@ function hotel_rates_calendar($selectedMonth = null)
                                 echo $dayCount . '<br>';
                                 echo '<br>' . '<br>' . '<br>';
                                 echo '</td>';
-                            } elseif (isset($_POST['submit']) && ($dayCount >= $checkInDate) && ($dayCount <= $checkOutDate) && ($m === $checkInMonth)) {
-                                if (isset($data[$index])) {
+                            } elseif (isset ($_POST['submit']) && ($dayCount >= $checkInDate) && ($dayCount <= $checkOutDate) && ($m === $checkInMonth)) {
+                                if (isset ($data[$index])) {
                                     $row = $data[$index][1];
                                     echo '<td class="selected-day">';
                                     echo $dayCount . '<br>';
@@ -245,7 +528,7 @@ function hotel_rates_calendar($selectedMonth = null)
                                     echo '</td>';
                                 }
                             } else {
-                                if (isset($data[$index])) {
+                                if (isset ($data[$index])) {
                                     $row = $data[$index][1];
                                     echo '<td class="unselected-day">';
                                     echo $dayCount . '<br>';
@@ -286,7 +569,7 @@ function hotel_rates_calendar($selectedMonth = null)
                                 echo '<br>' . '<br>' . '<br>';
                                 echo '</td>';
                             } else {
-                                if (isset($data[$index])) {
+                                if (isset ($data[$index])) {
                                     $row = $data[$index][1];
                                     echo '<td class="unselected-day">';
                                     echo $dayCount . '<br>';
@@ -399,10 +682,9 @@ function hotel_rates_calendar($selectedMonth = null)
     });
     </script>';
     echo '</div>';
-    if (isset($_POST['submit_button_2'])) {
+    if (isset ($_POST['submit_button_2'])) {
         ?>
-        <script>
-            window.location.href = "http://localhost:10010/?page_id=132";
+        <script>     window.location.href = "http://localhost:10010/?page_id=132";
         </script>
         <?php
 
@@ -411,12 +693,12 @@ function hotel_rates_calendar($selectedMonth = null)
 }
 function hotel_rates_calendar_mobile($selectedMonth = null)
 {
-    $filename = plugin_dir_url(__FILE__) . 'Booking.csv';
+    $filename = plugin_dir_url(__FILE__) . 'EntireManorPriceList.csv';
     $data = [];
     $f = fopen($filename, 'r');
 
     if ($f === false) {
-        die('Cannot open the file ' . $filename);
+        die ('Cannot open the file ' . $filename);
     }
     while (($row = fgetcsv($f)) !== false) {
         $data[] = $row;
@@ -433,7 +715,6 @@ function hotel_rates_calendar_mobile($selectedMonth = null)
     }
     fclose($f);*/
 
-    echo '<div class="hide_on_desktop">';
     $current_date = date('Y-n-j');
     $current_year = date('Y');
     $current_month = date('n') - 1;
@@ -455,7 +736,7 @@ function hotel_rates_calendar_mobile($selectedMonth = null)
     );
     $current_month_index = array_search($currmonth, $months);
 
-    echo '<div class="month_buttons_container_mobile">';
+    echo '<div class="month_buttons_container_mobile hide-on-desktop">';
     foreach ($months as $monthIndex => $month) {
         if ($monthIndex >= $current_month_index) {
             $active = $selectedMonth === $monthIndex ? 'active' : '';
@@ -468,13 +749,13 @@ function hotel_rates_calendar_mobile($selectedMonth = null)
     if ($selectedMonth === '') {
         $selectedMonth = $current_month;
     }
-    echo '<div class="calendar_container_mobile">';
+    echo '<div class="calendar_container_mobile hide-on-desktop">';
     foreach ($months as $mIndex => $m) {
         if ($mIndex >= $current_month_index) {
-            echo '<div class="calendar_mobile" data-month="' . $mIndex . '" style="display: ' . ($selectedMonth == $mIndex ? 'block' : 'none') . ';">';
-            echo '<h3>' . $m . ' ' . $current_year . '</h3>';
+            echo '<div class="calendar_mobile hide-on-desktop" data-month="' . $mIndex . '" style="display: ' . ($selectedMonth == $mIndex ? 'block' : 'none') . ';">';
+            echo '<h3 class="hide-on-desktop">' . $m . ' ' . $current_year . '</h3>';
             echo '<table>';
-            echo '<thead>';
+            echo '<thead class="hide-on-desktop">';
             echo '<tr>';
             echo '<th class="small_table_mobile">Sun</th>';
             echo '<th class="small_table_mobile">Mon</th>';
@@ -485,7 +766,7 @@ function hotel_rates_calendar_mobile($selectedMonth = null)
             echo '<th class="small_table_mobile">Sat</th>';
             echo '</tr>';
             echo '</thead>';
-            echo '<tbody>';
+            echo '<tbody class="hide-on-desktop">';
 
             $firstDay = date('w', strtotime("$current_year-$m-01"));
             $daysInMonth = date('t', strtotime("$current_year-$m-01"));
@@ -493,7 +774,7 @@ function hotel_rates_calendar_mobile($selectedMonth = null)
             $dayCount = 1;
             session_start();
 
-            if (isset($_SESSION['stay_details'])) {
+            if (isset ($_SESSION['stay_details'])) {
                 $stay_details = $_SESSION['stay_details'];
                 $checkInDate = $stay_details->check_in_date;
                 $checkOutDate = $stay_details->check_out_date;
@@ -503,18 +784,18 @@ function hotel_rates_calendar_mobile($selectedMonth = null)
                 $C = substr($checkInMonth, 0, 3);
 
                 for ($i = 0; $i < 6; $i++) {
-                    echo '<tr>';
+                    echo '<tr class="hide-on-desktop">';
 
                     for ($j = 0; $j < 7; $j++) {
                         if (($i === 0 && $j < $firstDay) || $dayCount > $daysInMonth) {
-                            echo '<td></td>';
+                            echo '<td ></td>';
                         } else {
                             if (($m === date('M')) && ($dayCount < $currentDay)) {
                                 echo '<td class="past_days_mobile">';
                                 echo $dayCount . '<br>';
                                 echo '</td>';
-                            } elseif (isset($_POST['submit']) && ($dayCount >= $A) && ($dayCount <= $B) && ($m === $C)) {
-                                if (isset($data[$index])) {
+                            } elseif (isset ($_POST['submit']) && ($dayCount >= $A) && ($dayCount <= $B) && ($m === $C)) {
+                                if (isset ($data[$index])) {
                                     $row = $data[$index][1];
                                     echo '<td class="selected_day_mobile">';
                                     echo $dayCount . '<br>';
@@ -527,7 +808,7 @@ function hotel_rates_calendar_mobile($selectedMonth = null)
                                     echo '</td>';
                                 }
                             } else {
-                                if (isset($data[$index])) {
+                                if (isset ($data[$index])) {
                                     $row = $data[$index][1];
                                     echo '<td class="unselected_day_mobile">';
                                     echo $dayCount . '<br>';
@@ -549,7 +830,7 @@ function hotel_rates_calendar_mobile($selectedMonth = null)
                 echo '</tbody>';
                 echo '</table>';
                 echo '<form method="post">';
-                echo '<p><input type="submit" name="submit_button_2" class="submit_button_mobile_2" value="Book Now "/></p>';
+                echo '<p><input type="submit" name="submit_button_2" class="submit_button_mobile_2 hide-on-desktop" value="Book Now "/></p>';
                 echo '</form>';
                 echo '</div>';
             } else {
@@ -565,7 +846,7 @@ function hotel_rates_calendar_mobile($selectedMonth = null)
                                 echo $dayCount . '<br>';
                                 echo '</td>';
                             } else {
-                                if (isset($data[$index])) {
+                                if (isset ($data[$index])) {
                                     $row = $data[$index][1];
                                     echo '<td class="unselected_day_mobile">';
                                     echo $dayCount . '<br>';
@@ -586,9 +867,11 @@ function hotel_rates_calendar_mobile($selectedMonth = null)
                 }
                 echo '</tbody>';
                 echo '</table>';
-                echo '<form method="post">';
+                echo '<div class="hide-on-desktop">';
+                echo '<form method="post" class="hide-on-desktop">';
                 echo '<p><input type="submit" name="submit_button_2" class="submit_button_mobile_2" value="Book Now "/></p>';
                 echo '</form>';
+                echo '</div>';
                 echo '</div>';
             }
             echo '</div>';
@@ -676,12 +959,11 @@ function hotel_rates_calendar_mobile($selectedMonth = null)
     });
 </script>';
     echo '<script>
-if (window.innerWidth >= 800) {
-    document.getElementById("elementId").classList.add("hide-on_desktop");
-}
-</script>';
-    echo '</div>';
-    if (isset($_POST['submit_button_2'])) {
+            if (window.innerWidth >= 800) {
+                document.getElementById("elementId").classList.add("hide-on_desktop");
+            }
+          </script>';
+    if (isset ($_POST['submit_button_2'])) {
         ?>
         <script>     window.location.href = "http://localhost:10010/?page_id=132";
         </script>
@@ -694,6 +976,10 @@ if (window.innerWidth >= 800) {
 function entire_manor_booking_function()
 {
 
+    echo '<div class="haygood-manor-heading">';
+    echo '<h1>HayGood Manor</h1>';
+    echo '</div>';
+
     echo '<script src="' . plugin_dir_url(__FILE__) . 'form_handling.js"></script>';
     echo '<div class="heading">';
     echo '<h2>Review Your Booking</h2>';
@@ -701,7 +987,7 @@ function entire_manor_booking_function()
 
     session_start();
 
-    if (isset($_SESSION['stay_details'])) {
+    if (isset ($_SESSION['stay_details'])) {
         $stay_details = $_SESSION['stay_details'];
         $checkIn = $stay_details->check_in;
         $checkOut = $stay_details->check_out;
@@ -792,7 +1078,7 @@ function entire_manor_booking_function()
     $coupons = get_option('booking_coupon_data', array());
 
 
-    if (isset($_POST['submit'])) {
+    if (isset ($_POST['submit'])) {
 
         $check_in_date = $checkIn;
         $check_out_date = $checkOut;
@@ -826,7 +1112,7 @@ function entire_manor_booking_function()
 
         $coupon_code = sanitize_text_field($_POST['coupon_code']);
 
-        if (!empty($coupon_code)) {
+        if (!empty ($coupon_code)) {
             foreach ($coupons as $cc) {
                 if ($coupon_code === $cc['code']) {
                     $discount_amount = $cc['discount'] * $price_after_added_fee / 100;
@@ -838,6 +1124,8 @@ function entire_manor_booking_function()
         }
 
         $booking_details = new stdClass();
+        $booking_details->check_in = $checkIn;
+        $booking_details->check_out = $checkOut;
         $booking_details->check_in_day = $day_checkin;
         $booking_details->check_in_date = $date_checkin;
         $booking_details->check_in_month = $month_checkin;
@@ -861,7 +1149,7 @@ function entire_manor_booking_function()
         $booking_details->total_price = $total_price;
         $booking_details->cleaning_fee = $cleaning_fee;
         $booking_details->coupon_code = $coupon_code;
-        $booking_details->discount_amount = isset($discount_amount) ? $discount_amount : 0;
+        $booking_details->discount_amount = isset ($discount_amount) ? $discount_amount : 0;
         $booking_details->total_amount = $total_amount;
 
         $_SESSION['booking_details'] = $booking_details;
@@ -876,6 +1164,10 @@ function entire_manor_booking_function()
 
 function rooms_booking_function()
 {
+    echo '<div class="haygood-manor-heading">';
+    echo '<h1>HayGood Manor</h1>';
+    echo '</div>';
+
     echo '<script src="' . plugin_dir_url(__FILE__) . 'form_handling.js"></script>';
     echo '<div class="heading">';
     echo '<h2>Review Your Booking</h2>';
@@ -883,7 +1175,7 @@ function rooms_booking_function()
 
     session_start();
 
-    if (isset($_SESSION['stay_details'])) {
+    if (isset ($_SESSION['stay_details'])) {
         $stay_details = $_SESSION['stay_details'];
         $checkIn = $stay_details->check_in;
         $checkOut = $stay_details->check_out;
@@ -975,7 +1267,7 @@ function rooms_booking_function()
 
 
 
-    if (isset($_POST['submit'])) {
+    if (isset ($_POST['submit'])) {
 
         $check_in_date = $checkIn;
         $check_out_date = $checkOut;
@@ -1009,7 +1301,7 @@ function rooms_booking_function()
 
         $coupon_code = sanitize_text_field($_POST['coupon_code']);
 
-        if (!empty($coupon_code)) {
+        if (!empty ($coupon_code)) {
             foreach ($coupons as $cc) {
                 if ($coupon_code === $cc['code']) {
                     $discount_amount = $cc['discount'] * $price_after_added_fee / 100;
@@ -1046,7 +1338,7 @@ function rooms_booking_function()
         $booking_details->total_price = $total_price;
         $booking_details->cleaning_fee = $cleaning_fee;
         $booking_details->coupon_code = $coupon_code;
-        $booking_details->discount_amount = isset($discount_amount) ? $discount_amount : 0;
+        $booking_details->discount_amount = isset ($discount_amount) ? $discount_amount : 0;
         $booking_details->total_amount = $total_amount;
 
         $_SESSION['booking_details'] = $booking_details;
@@ -1061,6 +1353,9 @@ function rooms_booking_function()
 
 function cooking_class_booking_function()
 {
+    echo '<div class="haygood-manor-heading">';
+    echo '<h1>HayGood Manor</h1>';
+    echo '</div>';
 
     echo '<script src="' . plugin_dir_url(__FILE__) . 'form_handling.js"></script>';
     echo '<div class="heading">';
@@ -1069,7 +1364,7 @@ function cooking_class_booking_function()
 
     session_start();
 
-    if (isset($_SESSION['stay_details'])) {
+    if (isset ($_SESSION['stay_details'])) {
         $stay_details = $_SESSION['stay_details'];
         $checkIn = $stay_details->check_in;
         $checkOut = $stay_details->check_out;
@@ -1161,7 +1456,7 @@ function cooking_class_booking_function()
 
 
 
-    if (isset($_POST['submit'])) {
+    if (isset ($_POST['submit'])) {
 
         $check_in_date = $checkIn;
         $check_out_date = $checkOut;
@@ -1195,7 +1490,7 @@ function cooking_class_booking_function()
 
         $coupon_code = sanitize_text_field($_POST['coupon_code']);
 
-        if (!empty($coupon_code)) {
+        if (!empty ($coupon_code)) {
             foreach ($coupons as $cc) {
                 if ($coupon_code === $cc['code']) {
                     $discount_amount = $cc['discount'] * $price_after_added_fee / 100;
@@ -1232,7 +1527,7 @@ function cooking_class_booking_function()
         $booking_details->total_price = $total_price;
         $booking_details->cleaning_fee = $cleaning_fee;
         $booking_details->coupon_code = $coupon_code;
-        $booking_details->discount_amount = isset($discount_amount) ? $discount_amount : 0;
+        $booking_details->discount_amount = isset ($discount_amount) ? $discount_amount : 0;
         $booking_details->total_amount = $total_amount;
 
         $_SESSION['booking_details'] = $booking_details;
@@ -1248,6 +1543,10 @@ function cooking_class_booking_function()
 
 function entire_manor_cooking_class_booking_function()
 {
+    echo '<div class="haygood-manor-heading">';
+    echo '<h1>HayGood Manor</h1>';
+    echo '</div>';
+
     echo '<script src="' . plugin_dir_url(__FILE__) . 'form_handling.js"></script>';
     echo '<div class="heading">';
     echo '<h2>Review Your Booking</h2>';
@@ -1255,7 +1554,7 @@ function entire_manor_cooking_class_booking_function()
 
     session_start();
 
-    if (isset($_SESSION['stay_details'])) {
+    if (isset ($_SESSION['stay_details'])) {
         $stay_details = $_SESSION['stay_details'];
         $checkIn = $stay_details->check_in;
         $checkOut = $stay_details->check_out;
@@ -1347,7 +1646,7 @@ function entire_manor_cooking_class_booking_function()
 
 
 
-    if (isset($_POST['submit'])) {
+    if (isset ($_POST['submit'])) {
 
         $check_in_date = $checkIn;
         $check_out_date = $checkOut;
@@ -1381,7 +1680,7 @@ function entire_manor_cooking_class_booking_function()
 
         $coupon_code = sanitize_text_field($_POST['coupon_code']);
 
-        if (!empty($coupon_code)) {
+        if (!empty ($coupon_code)) {
             foreach ($coupons as $cc) {
                 if ($coupon_code === $cc['code']) {
                     $discount_amount = $cc['discount'] * $price_after_added_fee / 100;
@@ -1392,9 +1691,9 @@ function entire_manor_cooking_class_booking_function()
             $total_amount = $price_after_added_fee;
         }
 
-
-
         $booking_details = new stdClass();
+        $booking_details->check_in = $checkIn;
+        $booking_details->check_out = $checkOut;
         $booking_details->check_in_day = $day_checkin;
         $booking_details->check_in_date = $date_checkin;
         $booking_details->check_in_month = $month_checkin;
@@ -1418,7 +1717,7 @@ function entire_manor_cooking_class_booking_function()
         $booking_details->total_price = $total_price;
         $booking_details->cleaning_fee = $cleaning_fee;
         $booking_details->coupon_code = $coupon_code;
-        $booking_details->discount_amount = isset($discount_amount) ? $discount_amount : 0;
+        $booking_details->discount_amount = isset ($discount_amount) ? $discount_amount : 0;
         $booking_details->total_amount = $total_amount;
 
         $_SESSION['booking_details'] = $booking_details;
@@ -1434,10 +1733,31 @@ function entire_manor_cooking_class_booking_function()
 
 function booking_details()
 {
+    echo '<div class="haygood-manor-heading">';
+    echo '<h1>HayGood Manor</h1>';
+    echo '</div>';
+
     session_start();
 
-    if (isset($_SESSION['booking_details'])) {
+    if (isset ($_SESSION['booking_details'])) {
         $booking_details = $_SESSION['booking_details'];
+        $checkIn = $booking_details->check_in;
+        $checkOut = $booking_details->check_out;
+        $no_of_adults = $booking_details->adults;
+        $no_of_children = $booking_details->children;
+        $fname = $booking_details->firstname;
+        $lname = $booking_details->lastname;
+        $email = $booking_details->email;
+        $phone = $booking_details->phone;
+        $addline1 = $booking_details->addline1;
+        $addline2 = $booking_details->addline2;
+        $city = $booking_details->city;
+        $state = $booking_details->state;
+        $country = $booking_details->country;
+        $zip = $booking_details->zip;
+        $booking_id = uniqid();
+        $FullName = $fname . " " . $lname;
+        $Address = $addline1 . " " . $addline2 . " " . $city . " " . $state . " " . $country . " " . $zip;
         echo '<div class="print_details_form">';
         echo '<div class="booking_details">';
         echo '<h3>Booking details</h3>';
@@ -1446,23 +1766,23 @@ function booking_details()
         echo '<p><span class="label">Check-out Date:</span> <span class="value">' . $booking_details->check_out_day . ', ' . $booking_details->check_out_month . ' ' . $booking_details->check_out_date . '</span></p>';
         echo '</div>';
         echo '<div class="booking_details_1">';
-        echo '<p><span class="label">Adults:</span> <span class="value">' . $booking_details->adults . '</span></p>';
-        echo '<p><span class="label">Children:</span> <span class="value">' . $booking_details->children . '</span></p>';
+        echo '<p><span class="label">Adults:</span> <span class="value">' . $no_of_adults . '</span></p>';
+        echo '<p><span class="label">Children:</span> <span class="value">' . $no_of_children . '</span></p>';
         echo '</div>';
         echo '</div>';
         echo '<div class="booked_by_info_box">';
         echo '<h3>Booked By</h3>';
         echo '<div class="booked_by">';
-        echo '<p><span class="label">Name:</span> <span class="value">' . $booking_details->firstname . ' ' . $booking_details->lastname . '</span></p>';
-        echo '<p><span class="label">Email:</span> <span class="value">' . $booking_details->email . '</span></p>';
-        echo '<p><span class="label">Phone:</span> <span class="value">' . $booking_details->phone . '</span></p>';
+        echo '<p><span class="label">Name:</span> <span class="value">' . $fname . ' ' . $lname . '</span></p>';
+        echo '<p><span class="label">Email:</span> <span class="value">' . $email . '</span></p>';
+        echo '<p><span class="label">Phone:</span> <span class="value">' . $phone . '</span></p>';
         echo '</div>';
 
         echo '<div class="booked_by">';
-        echo '<p><span class="label">Address:</span> <span class="value">' . $booking_details->addline1 . '</span></p>';
-        echo '<p><span class="label"></span> <span class="value">' . $booking_details->addline2 . '</span></p>';
-        echo '<p><span class="label"></span> <span class="value">' . $booking_details->city . ' , ' . $booking_details->state . '</span></p>';
-        echo '<p><span class="label"></span> <span class="value">' . $booking_details->country . ' , ' . $booking_details->zip . '</span></p>';
+        echo '<p><span class="label">Address:</span> <span class="value">' . $addline1 . '</span></p>';
+        echo '<p><span class="label"></span> <span class="value">' . $addline2 . '</span></p>';
+        echo '<p><span class="label"></span> <span class="value">' . $city . ' , ' . $state . '</span></p>';
+        echo '<p><span class="label"></span> <span class="value">' . $country . ' , ' . $zip . '</span></p>';
         echo '</div>';
         echo '</div>';
 
@@ -1472,7 +1792,7 @@ function booking_details()
         echo '<p><span class="label">Price per night:</span> <span class="value">$' . $booking_details->price_per_night . '</span></p>';
         echo '<p><span class="label">Price for ' . $booking_details->nights . ' nights:</span> <span class="value">$' . $booking_details->total_price . '</span></p>';
         echo '<p><span class="label">Cleaning Fee:</span> <span class="value">$' . $booking_details->cleaning_fee . '</span></p>';
-        if (!empty($booking_details->coupon_code)) {
+        if (!empty ($booking_details->coupon_code)) {
             echo '<p><span class="label">Discount applied:</span> <span class="value">-$' . $booking_details->discount_amount . '</span></p>';
         }
         echo '<h4><span class="label_total">Total amount:</span> <span class="value_total">$' . $booking_details->total_amount . '</span></h4>';
@@ -1480,6 +1800,34 @@ function booking_details()
         echo '</div>';
 
         echo '</div>';
+
+        $hostname = "localhost";
+        $username = "root";
+        $password = "root";
+        $database = "local";
+        $conn = mysqli_connect($hostname, $username, $password, $database);
+        if (mysqli_connect_errno()) {
+            die ("Connection Failed:" . mysqli_connect_errno());
+        }
+
+        $insert_query = "INSERT INTO `booking_details` (`Booking ID`,`Name`,`Email`,`Phone`,`Address`,`Check In`,`Check Out`,`Adults`,`Children`) 
+                VALUES (?,?,?,?,?,?,?,?,?)";
+        $stmt = mysqli_stmt_init($conn);
+
+        if (!$stmt) {
+            die ("Statement initialization failed: " . mysqli_error($conn));
+        }
+
+        if (!mysqli_stmt_prepare($stmt, $insert_query)) {
+            die ("Statement preparation failed: " . mysqli_stmt_error($stmt));
+        }
+        mysqli_stmt_bind_param($stmt, "sssisssss", $booking_id, $FullName, $email, $phone, $Address, $checkIn, $checkOut, $no_of_adults, $no_of_children);
+        if (!mysqli_stmt_execute($stmt)) {
+            die ("Statement execution failed: " . mysqli_stmt_error($stmt));
+        }
+        mysqli_stmt_close($stmt);
+        mysqli_close($conn);
+
 
         unset($_SESSION['booking_details']);
 
@@ -1494,47 +1842,43 @@ function booking_details()
 
 function validate_dates($check_in_date, $check_out_date)
 {
-    if (empty($check_in_date) || empty($check_out_date)) {
+    if (empty ($check_in_date) || empty ($check_out_date)) {
         return false;
     }
-
     return true;
 }
-
-
 
 function booking_plugin_menu()
 {
     add_menu_page(
-        'Booking Plugin Settings',
+        'Booking Settings',
         'Booking Plugin',
         'manage_options',
         'booking-plugin',
         'booking_plugin_settings_page',
-        plugin_dir_url(__FILE__) . 'assets/images/A.png'
+        'dashicons-calendar'
     );
 }
 
 add_action('admin_menu', 'booking_plugin_menu');
 
-
 function booking_plugin_settings_page()
 {
     ?>
-    <div class="wrap">
-        <h2>Booking Plugin Settings</h2>
-        <form method="post" action="options.php" enctype="multipart/form-data">
-            <?php
-            settings_fields('booking_plugin_settings');
-            do_settings_sections('booking_plugin_settings');
-            submit_button();
-            ?>
-        </form>
+    <div class="accom-title">
+        <table class="styled-table">
+            <form method="post" action="options.php" enctype="multipart/form-data">
+                <?php
+                settings_fields('booking_plugin_settings');
+                do_settings_sections('booking_plugin_settings');
+                echo '<input type="submit" name="submit_button" value="Save"/>';
+                //submit_button();
+                ?>
+            </form>
+        </table>
     </div>
     <?php
 }
-
-
 function booking_plugin_settings()
 {
     register_setting('booking_plugin_settings', 'entire_manor_price');
@@ -1545,15 +1889,62 @@ function booking_plugin_settings()
     register_setting('booking_plugin_settings', 'booking_coupon_data');
     register_setting('booking_plugin_settings', 'upload_csv');
 
-    add_settings_section('booking_plugin_main_section', 'Main Settings', 'booking_plugin_section_callback', 'booking_plugin_settings');
+    add_settings_section(
+        'booking_plugin_main_section',
+        'Main Settings',
+        'booking_plugin_section_callback',
+        'booking_plugin_settings'
+    );
 
-    add_settings_field('entire_manor_price_field', 'Entire Manor', 'entire_manor_price_field_callback', 'booking_plugin_settings', 'booking_plugin_main_section');
-    add_settings_field('rooms_price_field', 'Rooms', 'rooms_price_field_callback', 'booking_plugin_settings', 'booking_plugin_main_section');
-    add_settings_field('cooking_class_price_field', 'Cooking Class', 'cooking_class_price_field_callback', 'booking_plugin_settings', 'booking_plugin_main_section');
-    add_settings_field('entire_manor_cooking_class_price_field', 'Entire Manor + Cooking Class', 'entire_manor_cooking_class_price_field_callback', 'booking_plugin_settings', 'booking_plugin_main_section');
-    add_settings_field('cleaning_fee_field', 'Miscellaneous Fee', 'cleaning_fee_callback', 'booking_plugin_settings', 'booking_plugin_main_section');
-    add_settings_field('booking_field_coupons', 'Coupon Codes and Discount Prices', 'booking_field_coupons_callback', 'booking_plugin_settings', 'booking_plugin_main_section');
-    add_settings_field('upload_csv_field', 'Price Sheet (CSV)', 'upload_csv_field_callback', 'booking_plugin_settings', 'booking_plugin_main_section');
+    add_settings_field(
+        'entire_manor_price_field',
+        'Entire Manor',
+        'entire_manor_price_field_callback',
+        'booking_plugin_settings',
+        'booking_plugin_main_section'
+    );
+    add_settings_field(
+        'rooms_price_field',
+        'Rooms',
+        'rooms_price_field_callback',
+        'booking_plugin_settings',
+        'booking_plugin_main_section'
+    );
+    add_settings_field(
+        'cooking_class_price_field',
+        'Cooking Class',
+        'cooking_class_price_field_callback',
+        'booking_plugin_settings',
+        'booking_plugin_main_section'
+    );
+    add_settings_field(
+        'entire_manor_cooking_class_price_field',
+        'Entire Manor + Cooking Class',
+        'entire_manor_cooking_class_price_field_callback',
+        'booking_plugin_settings',
+        'booking_plugin_main_section'
+    );
+    add_settings_field(
+        'cleaning_fee_field',
+        'Miscellaneous Fee',
+        'cleaning_fee_callback',
+        'booking_plugin_settings',
+        'booking_plugin_main_section'
+    );
+    add_settings_field(
+        'booking_field_coupons',
+        'Coupon Codes and Discount Prices',
+        'booking_field_coupons_callback',
+        'booking_plugin_settings',
+        'booking_plugin_main_section'
+    );
+    /*add_settings_field(
+        'upload_csv_field',
+        'Price Sheet (CSV)',
+        'upload_csv_field_callback',
+        'booking_plugin_settings',
+        'booking_plugin_main_section',
+    );*/
 }
 
 function booking_plugin_section_callback()
@@ -1563,26 +1954,160 @@ function booking_plugin_section_callback()
 
 function entire_manor_price_field_callback()
 {
-    $Entire_Manor = get_option('entire_manor_price');
-    echo '<input type="text" name="entire_manor_price" value="' . esc_attr($Entire_Manor) . '" />';
+    // $Entire_Manor = get_option('entire_manor_price');
+    //echo '<input type="text" name="entire_manor_price" value="' . esc_attr($Entire_Manor) . '" />';
+    echo '<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>';
+    ?>
+    <input type="file" id="csv-file-1" accept=".csv">
+    <script>
+        document.getElementById("csv-file-1").addEventListener("change", function (event) {
+            var file = event.target.files[0];
+            if (!file) {
+                return;
+            }
+
+            Papa.parse(file, {
+                header: false,
+                complete: function (results) {
+                    // CSV data is parsed, results.data contains the parsed data
+                    console.log("Parsed CSV data:", results.data);
+                }
+            });
+            var formData = new FormData();
+            formData.append('file', file);
+
+            // AJAX request
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', '/wp-admin/admin-ajax.php?action=upload_file');
+            xhr.onload = function () {
+                if (xhr.status === 200) {
+                    console.log('File uploaded successfully');
+                } else {
+                    console.log('Error uploading file');
+                }
+            };
+            xhr.send(formData);
+        });
+
+    </script>
+    <?php
 }
 
 function rooms_price_field_callback()
 {
-    $Rooms = get_option('rooms_price');
-    echo '<input type="text" name="rooms_price" value="' . esc_attr($Rooms) . '" />';
+    echo '<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>';
+    ?>
+    <input type="file" id="csv-file-2" accept=".csv">
+    <script>
+        document.getElementById("csv-file-2").addEventListener("change", function (event) {
+            var file = event.target.files[0];
+            if (!file) {
+                return;
+            }
+
+            Papa.parse(file, {
+                header: false,
+                complete: function (results) {
+                    // CSV data is parsed, results.data contains the parsed data
+                    console.log("Parsed CSV data:", results.data);
+                }
+            });
+            var formData = new FormData();
+            formData.append('file', file);
+
+            // AJAX request
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', '/wp-admin/admin-ajax.php?action=upload_file');
+            xhr.onload = function () {
+                if (xhr.status === 200) {
+                    console.log('File uploaded successfully');
+                } else {
+                    console.log('Error uploading file');
+                }
+            };
+            xhr.send(formData);
+        });
+
+    </script>
+    <?php
 }
 
 function cooking_class_price_field_callback()
 {
-    $Cooking_Class = get_option('cooking_class_price');
-    echo '<input type="text" name="cooking_class_price" value="' . esc_attr($Cooking_Class) . '" />';
+    echo '<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>';
+    ?>
+    <input type="file" id="csv-file-3" accept=".csv">
+    <script>
+        document.getElementById("csv-file-3").addEventListener("change", function (event) {
+            var file = event.target.files[0];
+            if (!file) {
+                return;
+            }
+
+            Papa.parse(file, {
+                header: false,
+                complete: function (results) {
+                    // CSV data is parsed, results.data contains the parsed data
+                    console.log("Parsed CSV data:", results.data);
+                }
+            });
+            var formData = new FormData();
+            formData.append('file', file);
+
+            // AJAX request
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', '/wp-admin/admin-ajax.php?action=upload_file');
+            xhr.onload = function () {
+                if (xhr.status === 200) {
+                    console.log('File uploaded successfully');
+                } else {
+                    console.log('Error uploading file');
+                }
+            };
+            xhr.send(formData);
+        });
+
+    </script>
+    <?php
 }
 
 function entire_manor_cooking_class_price_field_callback()
 {
-    $Entire_Manor_Cooking_Class = get_option('entire_manor_cooking_class_price');
-    echo '<input type="text" name="entire_manor_cooking_class_price" value="' . esc_attr($Entire_Manor_Cooking_Class) . '" />';
+    echo '<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>';
+    ?>
+    <input type="file" id="csv-fil-4" accept=".csv">
+    <script>
+        document.getElementById("csv-fil-4").addEventListener("change", function (event) {
+            var file = event.target.files[0];
+            if (!file) {
+                return;
+            }
+
+            Papa.parse(file, {
+                header: false,
+                complete: function (results) {
+                    // CSV data is parsed, results.data contains the parsed data
+                    console.log("Parsed CSV data:", results.data);
+                }
+            });
+            var formData = new FormData();
+            formData.append('file', file);
+
+            // AJAX request
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', '/wp-admin/admin-ajax.php?action=upload_file');
+            xhr.onload = function () {
+                if (xhr.status === 200) {
+                    console.log('File uploaded successfully');
+                } else {
+                    console.log('Error uploading file');
+                }
+            };
+            xhr.send(formData);
+        });
+
+    </script>
+    <?php
 }
 
 function cleaning_fee_callback()
@@ -1596,12 +2121,17 @@ function booking_field_coupons_callback()
     $coupon_data = get_option('booking_coupon_data', array());
 
     echo '<table id="coupon-data-table">';
-    echo '<tr><th>Coupon Code</th><th>Discount Percentage</th></tr>';
+    echo '<tr>
+            <th>Coupon Code</th>
+            <th>Discount Percentage</th>
+        </tr>';
 
     foreach ($coupon_data as $index => $data) {
         echo '<tr>';
-        echo '<td><input type="text" name="booking_coupon_data[' . $index . '][code]" value="' . esc_attr($data['code']) . '" /></td>';
-        echo '<td><input type="text" name="booking_coupon_data[' . $index . '][discount]" value="' . esc_attr($data['discount']) . '" /></td>';
+        echo '<td><input type="text" name="booking_coupon_data[' . $index . '][code]"
+                    value="' . esc_attr($data['code']) . '" /></td>';
+        echo '<td><input type="text" name="booking_coupon_data[' . $index . '][discount]"
+                    value="' . esc_attr($data['discount']) . '" /></td>';
         echo '<td><button class="remove-coupon-button" type="button">Remove</button></td>';
         echo '</tr>';
     }
@@ -1616,37 +2146,593 @@ function booking_field_coupons_callback()
     <?php
 }
 
-function upload_csv_field_callback()
+
+/*function upload_csv_field_callback()
 {
+    echo '<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>';
     ?>
-    <form id="csv-upload-form" method="post" enctype="multipart/form-data">
-        <input type="file" name="csv_file" value="' . esc_attr($CSV_File) . '" />
-        <input type="submit" name="submit_csv" value="Upload" />
-        <div id="upload-message"></div>
-    </form>
+    <input type="file" id="csv-file" accept=".csv">
+    <script>
+        document.getElementById("csv-file").addEventListener("change", function (event) {
+            var file = event.target.files[0];
+            if (!file) {
+                return;
+            }
+
+            Papa.parse(file, {
+                header: false,
+                complete: function (results) {
+                    // CSV data is parsed, results.data contains the parsed data
+                    console.log("Parsed CSV data:", results.data);
+                }
+            });
+            var formData = new FormData();
+            formData.append('file', file);
+
+            // AJAX request
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', '/wp-admin/admin-ajax.php?action=upload_file');
+            xhr.onload = function () {
+                if (xhr.status === 200) {
+                    console.log('File uploaded successfully');
+                } else {
+                    console.log('Error uploading file');
+                }
+            };
+            xhr.send(formData);
+        });
+
+    </script>
     <?php
-    handle_file_upload();
-}
-function handle_file_upload()
+}*/
+
+add_action('wp_ajax_upload_file', 'upload_file_handler');
+add_action('wp_ajax_nopriv_upload_file', 'upload_file_handler');
+
+function upload_file_handler()
 {
-    if (isset($_POST['submit_csv'])) {
-        echo 'BlaaaBlee';
-        $uploaded_file = $_FILES['csv_file'];
-        $upload_dir = wp_upload_dir();
-        $target_file = $upload_dir['path'] . '/' . basename($uploaded_file['name']);
-        $file_type = pathinfo($target_file, PATHINFO_EXTENSION);
+    if (!empty ($_FILES['file'])) {
+        $file = $_FILES['file'];
+        $upload_dir = $_SERVER['DOCUMENT_ROOT'] . '/wp-content/plugins/Complete Booking Plugin/assets/Prices';
+        $upload_path = $upload_dir . '/' . $file['name'];
 
-        if (strtolower($file_type) !== 'csv') {
-            echo 'Please upload a CSV file.';
-            return;
-        }
-
-        if (move_uploaded_file($uploaded_file['tmp_name'], $target_file)) {
-            echo 'File uploaded successfully.';
+        if (move_uploaded_file($file['tmp_name'], $upload_path)) {
+            // File uploaded successfully
+            echo 'File uploaded successfully';
         } else {
-            echo 'Error uploading file.';
+            // Error uploading file
+            echo 'Error uploading file';
         }
-        return true;
+    } else {
+        // No file uploaded
+        echo 'No file uploaded';
     }
+    wp_die();
 }
+
+
 add_action('admin_init', 'booking_plugin_settings');
+function booking_add_customer_details_submenu()
+{
+    add_submenu_page(
+        'booking-plugin',
+        'Customer Details',
+        'Customer Details',
+        'manage_options',
+        'customer-details',
+        'booking_customer_details_page'
+    );
+}
+add_action('admin_menu', 'booking_add_customer_details_submenu');
+
+function booking_customer_details_page($selectedMonth = NULL)
+{
+    echo '<body style=" background-color: rgba(255, 255, 255, 0.992); max-width: 1600px;">';
+    $currentDay = intval(date('j', strtotime(date('Y-n-j'))));
+    $currmonth = date('F');
+    $current_month = date('n') - 1;
+    $current_year = date('Y');
+    $months = array(
+        'January',
+        'February',
+        'March',
+        'April',
+        'May',
+        'June',
+        'July',
+        'August',
+        'September',
+        'October',
+        'November',
+        'December'
+    );
+
+    $current_month_index = array_search($currmonth, $months);
+    $hostname = "localhost";
+    $username = "root";
+    $password = "root";
+    $database = "local";
+    $conn = mysqli_connect($hostname, $username, $password, $database);
+    if (mysqli_connect_errno()) {
+        die ("Connection Failed:" . mysqli_connect_errno());
+    }
+
+    $select_query = "SELECT * FROM `booking_details`";
+    $result = mysqli_query($conn, $select_query);
+
+    if (!$result) {
+        die ("Error retrieving data: " . mysqli_error($conn));
+    }
+    $bookings = array();
+    while ($row = mysqli_fetch_assoc($result)) {
+        $bookings[] = $row;
+    }
+
+    echo '<head> <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha384-...">
+    </head>';
+    echo '<div class="header">';
+    echo '<h1 class="heading"> HayGood Manor Bookings </h1>';
+    echo '<div class="month-buttons-container">';
+    foreach ($months as $monthIndex => $month) {
+        if ($monthIndex >= $current_month_index) {
+            $active = $selectedMonth === $monthIndex ? 'active' : '';
+            echo '<button class="month-button ' . $active . '" data-month="' . $monthIndex . '">' . $month . ' ' . $current_year . '</button>';
+        }
+    }
+    echo '</div>';
+    echo '</div>';
+
+    if ($selectedMonth === '') {
+        $selectedMonth = $current_month;
+    }
+    echo '<div class="calendar-container">';
+    foreach ($months as $mIndex => $m) {
+        if ($mIndex >= $current_month_index) {
+            echo '<div class="calendar" data-month="' . $mIndex . '" style="display: ' . ($selectedMonth == $mIndex ? 'block' : 'none') . ';">';
+            echo '<h3>' . $m . ' ' . $current_year . '</h3>';
+            echo '<table>';
+            echo '<thead>';
+            echo '<tr>';
+            echo '<th>Sun</th>';
+            echo '<th>Mon</th>';
+            echo '<th>Tue</th>';
+            echo '<th>Wed</th>';
+            echo '<th>Thu</th>';
+            echo '<th>Fri</th>';
+            echo '<th>Sat</th>';
+            echo '</tr>';
+            echo '</thead>';
+            echo '<tbody>';
+            $firstDay = date('w', strtotime("$current_year-$m-01"));
+            $daysInMonth = date('t', strtotime("$current_year-$m-01"));
+            $colors = array(
+                "#b75353",
+                "#5e5ebe",
+                "#6cab6c",
+                "#cba55d",
+                "#ca6f74",
+            );
+            $dayCount = 1;
+            $c = 0;
+            if ($c >= 5) {
+                $c = 0;
+            }
+            for ($i = 0; $i < 6; $i++) {
+                echo '<tr>';
+                for ($j = 0; $j < 7; $j++) {
+                    if (($i === 0 && $j < $firstDay) || $dayCount > $daysInMonth) {
+                        echo '<td  class="empty"></td>';
+                    } else {
+                        if (($m === date('F')) && ($dayCount < $currentDay)) {
+                            echo '<td class="past-days">';
+                            echo $dayCount . '<br>';
+                            echo '<br>';
+                            echo '</td>';
+                            $dayCount++;
+                        } else {
+                            $bookingFound = false;
+                            $weekend = false;
+                            foreach ($bookings as $booking) {
+                                $booked_check_in = intval(date('j', strtotime($booking['Check In'])));
+                                $booked_check_out = intval(date('j', strtotime($booking['Check Out'])));
+                                $booked_check_in_month = date('F', strtotime($booking['Check In']));
+
+                                if (($booked_check_in >= $currentDay) && ($dayCount >= $booked_check_in) && ($dayCount <= $booked_check_out) && ($m === $booked_check_in_month)) {
+                                    $colspan = min($booked_check_out - $dayCount + 1, 7 - $j);
+                                    if ((7 - $j) < ($booked_check_out - $dayCount + 1)) {
+                                        $weekend = true;
+                                    }
+
+                                    echo '<td class="booked-days" colspan="' . $colspan . '">';
+                                    echo $dayCount . '<br>';
+                                    echo '<h1 style="background-color: ' . $colors[$c] . ';">';
+                                    echo '#' . $booking['Booking ID'] . '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' . $booking['Name'];
+                                    echo '</h1>';
+                                    echo '</td>';
+
+                                    $dayCount += $colspan;
+                                    $j += ($colspan - 1);
+                                    $bookingFound = true;
+                                    if (!$weekend) {
+                                        $c++;
+                                    }
+                                }
+                            }
+                            if ((!$bookingFound) && ($dayCount < $daysInMonth)) {
+                                echo '<td class="unselcted-days">';
+                                echo $dayCount . '<br>';
+                                echo '</td>';
+                                $dayCount++;
+                            }
+                        }
+                    }
+                }
+                echo '</tr>';
+            }
+            echo '</tbody>';
+            echo '</table>';
+            echo '</div>';
+        }
+    }
+
+    mysqli_free_result($result);
+    mysqli_close($conn);
+
+    echo '<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>';
+    echo '<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>';
+    echo '<script>
+            document.addEventListener("DOMContentLoaded", function () {
+                var currentMonthIndex = ' . $current_month . ';
+                var calendars = document.querySelectorAll(".calendar");
+                calendars.forEach(function (calendar) {
+                    var calendarMonth = calendar.getAttribute("data-month");
+                    if (calendarMonth == currentMonthIndex) {
+                        calendar.style.display = "block";
+                    } else {
+                        calendar.style.display = "none";
+                    }
+                });
+
+                var buttons = document.querySelectorAll(".month-button");
+                buttons.forEach(function (button) {
+                    button.addEventListener("click", function () {
+                        var selectedMonth = this.getAttribute("data-month");
+                        var calendars = document.querySelectorAll(".calendar");
+                        calendars.forEach(function (calendar) {
+                            var calendarMonth = calendar.getAttribute("data-month");
+                            calendar.style.display = selectedMonth === calendarMonth ? "block" : "none";
+                        });
+                        buttons.forEach(function (btn) {
+                            btn.classList.remove("active");
+                        });
+                        this.classList.add("active");
+                    });
+                });
+            });
+        </script>';
+    echo '<head> <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha384-...">
+</head>';
+
+    echo '<div class="customer-details">';
+    echo '<div class="booking-heading">';
+    echo '<h1>Bookings</h1>';
+    echo '</div>';
+    echo '<div class="past-bookings">';
+    echo '<h1><i class="far fa-calendar-alt custom-icon"></i>  Past Bookings</h1>';
+    echo '</div>';
+    $hostname = "localhost";
+    $username = "root";
+    $password = "root";
+    $database = "local";
+    $conn = mysqli_connect($hostname, $username, $password, $database);
+    if (mysqli_connect_errno()) {
+        die ("Connection Failed:" . mysqli_connect_errno());
+    }
+
+    $select_query = "SELECT * FROM `booking_details`";
+    $result = mysqli_query($conn, $select_query);
+
+    if (!$result) {
+        die ("Error retrieving data: " . mysqli_error($conn));
+    }
+    while ($row = mysqli_fetch_assoc($result)) {
+        $bookingID = $row['Booking ID'];
+        $one_day = 24 * 60 * 60;
+        $nights = round(abs((strtotime($row['Check Out']) - strtotime($row['Check In'])) / $one_day));
+        $people = $row['Adults'] + $row['Children'];
+        if (($row['Check In']) <= (date('Y-m-d'))) {
+            echo '<div class="booking" id="booking-' . $bookingID . '">';
+            echo '<p>' . $nights . '  <i class="fas fa-moon"></i></p>';
+            echo '<p>' . date('M', strtotime($row['Check In'])) . " " . date('j', strtotime($row['Check In'])) . "-" . date('M', strtotime($row['Check Out'])) . " " . date('j', strtotime($row['Check Out'])) . '</p>';
+            echo '<p>' . $people . ' <i class="fas fa-users"></i></p>';
+            echo '<p>' . $row['Name'] . '</p>';
+
+            echo '<div class="additional-details" style="display: none;">';
+            echo '<p>Booking ID: ' . '#' . $bookingID . '</p>';
+            echo '<p>Name: ' . $row['Name'] . '</p>';
+            echo '<p>Email: ' . $row['Email'] . '</p>';
+            echo '<p>Phone:' . $row['Phone'] . '</p>';
+            echo '<p>Address:' . $row['Address'] . '</p>';
+            echo '<p>Stay:' . date('M', strtotime($row['Check In'])) . " " . date('j', strtotime($row['Check In'])) . "-" . date('M', strtotime($row['Check Out'])) . " " . date('j', strtotime($row['Check Out'])) . '</p>';
+            echo '<p>Adults:' . $row['Adults'] . '</p>';
+            echo '<p>Children:' . $row['Children'] . '</p>';
+            echo '</div>';
+            echo '</div>';
+        }
+    }
+    mysqli_free_result($result);
+    mysqli_close($conn);
+    echo '<div class="upcoming-bookings">';
+    echo '<h1><i class="far fa-calendar-alt custom-icon"></i>   Upcoming Bookings</h1>';
+    echo '</div>';
+    $hostname = "localhost";
+    $username = "root";
+    $password = "root";
+    $database = "local";
+    $conn = mysqli_connect($hostname, $username, $password, $database);
+    if (mysqli_connect_errno()) {
+        die ("Connection Failed:" . mysqli_connect_errno());
+    }
+
+    $select_query = "SELECT * FROM `booking_details`";
+    $result = mysqli_query($conn, $select_query);
+
+    if (!$result) {
+        die ("Error retrieving data: " . mysqli_error($conn));
+    }
+    while ($row = mysqli_fetch_assoc($result)) {
+        $bookingID = $row['Booking ID'];
+        $one_day = 24 * 60 * 60;
+        $nights = round(abs((strtotime($row['Check Out']) - strtotime($row['Check In'])) / $one_day));
+        $people = $row['Adults'] + $row['Children'];
+        if (($row['Check In']) > (date('Y-m-d'))) {
+            echo '<div class="booking" id="booking-' . $bookingID . '">';
+            echo '<p>' . $nights . '  <i class="fas fa-moon"></i></p>';
+            echo '<p>' . date('M', strtotime($row['Check In'])) . " " . date('j', strtotime($row['Check In'])) . "-" . date('M', strtotime($row['Check Out'])) . " " . date('j', strtotime($row['Check Out'])) . '</p>';
+            echo '<p>' . $people . ' <i class="fas fa-users"></i></p>';
+            echo '<p>' . $row['Name'] . '</p>';
+
+            echo '<div class="additional-details" style="display: none;">';
+            echo '<p>Booking ID: ' . '#' . $bookingID . '</p>';
+            echo '<p>Name: ' . $row['Name'] . '</p>';
+            echo '<p>Email: ' . $row['Email'] . '</p>';
+            echo '<p>Phone:' . $row['Phone'] . '</p>';
+            echo '<p>Address:' . $row['Address'] . '</p>';
+            echo '<p>Stay:' . date('M', strtotime($row['Check In'])) . " " . date('j', strtotime($row['Check In'])) . "-" . date('M', strtotime($row['Check Out'])) . " " . date('j', strtotime($row['Check Out'])) . '</p>';
+            echo '<p>Adults:' . $row['Adults'] . '</p>';
+            echo '<p>Children:' . $row['Children'] . '</p>';
+            echo '</div>';
+            echo '</div>';
+        }
+    }
+    mysqli_free_result($result);
+    mysqli_close($conn);
+    echo '</div>';
+
+    echo '<style>';
+    echo '.booking {';
+    echo 'overflow: hidden;';
+    echo 'transition: height 0.3s ease;';
+    echo '}';
+    echo '</style>';
+
+    echo '<script>';
+    echo 'document.addEventListener("DOMContentLoaded", function() {';
+
+    echo 'function handleBookingClick(booking) {';
+    echo 'var additionalDetails = booking.querySelector(".additional-details");';
+    echo 'if (additionalDetails.style.display === "none" || additionalDetails.style.display === "") {';
+    echo 'additionalDetails.style.display = "block";';
+    echo 'booking.style.height = (additionalDetails.scrollHeight) + "px";';
+    echo '} else {';
+    echo 'additionalDetails.style.display = "none";';
+    echo 'booking.style.height = "auto";';
+    echo '}';
+    echo '}';
+
+    echo 'var bookings = document.querySelectorAll(".booking");';
+    echo 'bookings.forEach(function(booking) {';
+    echo 'booking.addEventListener("click", function() {';
+    echo 'handleBookingClick(this);';
+    echo '});';
+    echo '});';
+
+    echo '});';
+    echo '</script>';
+
+    echo '<style>
+    .header{
+        width: 1600px;
+        box-shadow: 0px 2px 4px rgba(178, 214, 233, 0.757);
+        margin-left:-15px;
+        padding-bottom:10px;
+    }
+    .heading{
+        font-family: "Libre Baskerville", serif ;
+        background-image: linear-gradient(to right,#497fcf2f,#497fcf6d,#497fcfdd);
+        -webkit-background-clip: text;
+        color: transparent;
+        line-height:80px;
+       //display: inline-block;
+        text-align: center;
+        font-size: 50px;
+    }
+    .month-buttons-container {
+        gap: 10px;
+        display: flex;
+        justify-content: center;
+        margin: 0; 
+        padding: 0;
+        margin: 50px 30px 50px 30px;
+        padding: 0px 30px 0px 30px;
+    }
+    .month-button {
+        background-color: rgba(70, 129, 169, 0.703);
+        color: #ffffff;
+        border: solid;
+        border-color:#004573; 
+        padding: 0.5rem 1rem;
+        margin: 0 0.2rem;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        cursor: pointer;
+    }
+    .month-button:hover {
+        background-color: #4681a9;
+        color: #ffffff; 
+    }
+    .month-button.active {
+        border: solid;
+        border-color:#000000; 
+        background-color: #4681a9;
+        color: #ffffff;
+    }
+    .view{
+        display: flex;
+        width: 1600px;
+        box-shadow: 0px 2px 4px rgba(178, 214, 233, 0.757);
+        margin-left:-15px;
+        padding-bottom:10px;
+    }
+    .view-heading{
+        font-family: "Libre Baskerville", serif ;
+        background-image: linear-gradient(to right,#497fcf2f,#497fcf6d,#497fcfdd);
+        -webkit-background-clip: text;
+        color: transparent;
+        line-height:40px;
+        display: inline-block;
+        text-align: center;
+        font-size: 30px;
+        cursor:pointer;
+    }
+    .calendar h3{
+        font-family: "Libre Baskerville", serif ;
+        color: #333;
+        font-size: 30px;
+        margin-left: 500px;
+    }
+    .calendar-container{
+        margin-left: 15px;
+        display: flex;
+        flex-direction: row;
+    }
+    .calendar table{
+        width: 1050px;
+        border:  2px solid #497fcfb1;
+        border-radius: 15px;
+    }
+    .calendar th{
+        font-family: "Libre Baskerville", serif ;
+        width: 80px;
+        height: 30px;
+        border: 1px solid #cccccc;
+        padding: 5px;
+        text-align: center;
+        font-size: 20px;
+    }
+    .calendar td{
+        width: 80px;
+        height: 80px;
+        text-align: start;
+        border: 1px solid #cccccc;
+        padding: 5px;
+    }
+    .past-days{
+        background-color: rgba(70, 129, 169, 0.489);
+        color: #000000;
+    }
+    .booked-days h1{
+        font-family: "Libre Baskerville", serif ;
+        font-size:18px;
+        line-height:30px;
+        color: #ffffff;
+        border-radius:10px;
+        text-align:center;
+    }
+    .unselcted-days{
+        //background-color: rgba(70, 129, 169, 0.403);
+    }
+    .customer-details{
+        margin-left: 20px;
+        width: 500px;
+        border: 2px solid rgba(178, 214, 233, 0.757);
+        //box-shadow: -4px 0px 2px rgba(178, 214, 233, 0.757);
+    }
+    .booking-heading{
+        margin:0px;
+        margin-top:-25px;
+        width: 500px;
+        background-color: rgba(178, 214, 233, 0.757);
+        box-shadow: 0px 2px 2px rgba(178, 214, 233, 0.757);
+        padding-bottom:10px;
+    }
+    .booking-heading h1{
+        //margin:0px;
+        padding:0px;
+        width:100%;
+        font-family: "Libre Baskerville", serif ;
+        color: #080808;
+        font-size: 40px;
+        margin-left:100px;
+        padding-top: 30px;
+    }
+    .booking{
+        cursor: pointer;
+        height: 50px;
+        border-bottom: 5px solid #b2d6e9c1;
+        //border-bottom-width: 50%;
+        padding: 8px;
+        padding-left: 8px;
+        text-align: left;
+    }
+    .booking p{
+        margin-right: 25px;
+        display: inline-block;
+        //border-right: 2px solid #b2d6e9c1;
+        padding-right: 10px;
+        font-family: "Libre Baskerville", serif ;
+        font-size: 20px;
+    }
+    .additional-details{
+        padding: 20px;
+        background-color: rgba(178, 214, 233, 0.203);
+    }
+    .additional-details p{
+        font-family: "Libre Baskerville", serif ;
+        font-size: 20px;
+    }
+    .past-bookings{
+        border-bottom: 5px solid #0099eb85;
+    }
+    .past-bookings h1{
+        padding:0px;
+        width:100%;
+        font-family: "Libre Baskerville", serif ;
+        color: #080808;
+        font-size: 30px;
+        margin-left:30px;
+        padding-top: 20px;
+    }
+    .upcoming-bookings {
+        border-bottom: 5px solid #0099eb85;
+    }
+    .upcoming-bookings h1{
+        padding:0px;
+        width:100%;
+        font-family: "Libre Baskerville", serif ;
+        color: #080808;
+        font-size: 30px;
+        margin-left:30px;
+        padding-top: 20px;
+    }
+    .custom-icon{
+        font-size: 24px;
+        padding: 8px;
+        background-color: rgba(178, 214, 233, 0.757);
+        color:white;
+        border: 1px solid white;
+        border-radius: 20px;
+    }
+    </style>';
+}
